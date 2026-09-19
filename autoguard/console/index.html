@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auto-Guard Console</title>
+<style>
+:root {
+  --bg: #f6f6f4; --panel: #ffffff; --ink: #16181d; --muted: #6b6f78; --line: #e3e3df;
+  --term-bg: #101216; --term-ink: #d9dce3; --term-muted: #7d8494; --term-accent: #c79bff;
+  --red: #d8342c; --red-soft: #fbe3e1; --amber: #b86e00; --amber-soft: #fdf0d8;
+  --green: #1d8a4e; --green-soft: #dcf3e5; --track: #ecece8; --bar: #3a3f4b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0c0f; --panel: #14161b; --ink: #eceef2; --muted: #8b909c; --line: #262932;
+    --red: #ff5a4f; --red-soft: #3a1512; --amber: #ffb340; --amber-soft: #3a2a0c;
+    --green: #3ddc84; --green-soft: #0f2e1d; --track: #22252d; --bar: #c9ccd4;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b0c0f; --panel: #14161b; --ink: #eceef2; --muted: #8b909c; --line: #262932;
+  --red: #ff5a4f; --red-soft: #3a1512; --amber: #ffb340; --amber-soft: #3a2a0c;
+  --green: #3ddc84; --green-soft: #0f2e1d; --track: #22252d; --bar: #c9ccd4;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+.stage { display: grid; grid-template-columns: 1fr; gap: 16px; padding: 16px; min-height: 100%; }
+.scene .stage { grid-template-columns: 1.05fr 1fr; gap: 40px; padding: 56px; height: 100vh; }
+
+/* Terminal */
+.term { display: none; background: var(--term-bg); color: var(--term-ink); border-radius: 18px;
+  overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.35); flex-direction: column; }
+.scene .term { display: flex; }
+.term-bar { display: flex; gap: 10px; padding: 18px 22px; background: #1a1d23; align-items: center; }
+.term-bar i { width: 14px; height: 14px; border-radius: 50%; background: #3a3e47; display: block; }
+.term-bar span { margin-left: 12px; color: var(--term-muted); font-size: 18px; }
+.term-body { padding: 30px 34px; font-size: 27px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; flex: 1; }
+.t-user { color: #fff; }
+.t-user b { color: var(--term-accent); font-weight: 600; }
+.t-say { color: var(--term-ink); margin-top: 18px; }
+.t-dot { color: var(--term-muted); }
+.t-call { margin-top: 10px; }
+.t-call .name { color: #fff; font-weight: 700; }
+.t-cmd { color: #ffd479; }
+.t-out { color: var(--term-muted); padding-left: 34px; }
+.t-out.block { color: #ff6b61; }
+.t-out.allow { color: #62d98f; }
+.caret { display: inline-block; width: .55em; height: 1.05em; background: #ffd479; vertical-align: -0.15em; }
+
+/* Guard panel */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 24px; position: relative; overflow: hidden; }
+.scene .panel { padding: 40px 44px; display: flex; flex-direction: column; }
+.brand { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 15px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+.scene .brand { font-size: 20px; }
+.brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+.call { margin: 16px 0 20px; font-size: 18px; padding: 14px 16px; background: var(--track); border-radius: 10px; word-break: break-all; min-height: 1.4em; }
+.scene .call { font-size: 25px; margin: 24px 0 28px; padding: 18px 22px; }
+.rows { display: grid; gap: 14px; }
+.scene .rows { gap: 20px; }
+.row { display: grid; grid-template-columns: 150px 1fr 120px; align-items: center; gap: 14px; font-size: 16px; }
+.scene .row { grid-template-columns: 210px 1fr 175px; font-size: 24px; }
+.row .label { color: var(--muted); }
+.track { height: 12px; background: var(--track); border-radius: 6px; overflow: hidden; }
+.scene .track { height: 18px; border-radius: 9px; }
+.fill { height: 100%; width: 0; background: var(--bar); border-radius: inherit; }
+.fill.bad { background: var(--red); }
+.fill.warn { background: var(--amber); }
+.fill.good { background: var(--green); }
+.row .val { text-align: right; font-variant-numeric: tabular-nums; }
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+.scene .metrics { margin-top: auto; gap: 24px; }
+.metric { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.scene .metric { padding: 20px 24px; }
+.metric .k { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+.scene .metric .k { font-size: 17px; }
+.metric .v { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 4px; }
+.scene .metric .v { font-size: 52px; }
+.metric .sub { color: var(--muted); font-size: 13px; }
+.scene .metric .sub { font-size: 18px; }
+.stamp { position: absolute; left: 50%; bottom: 190px; padding: 10px 26px; border: 6px solid currentColor; border-radius: 14px;
+  font-size: 44px; font-weight: 900; letter-spacing: .06em; opacity: 0; transform-origin: center; pointer-events: none; }
+.scene .stamp { font-size: 84px; bottom: 250px; border-width: 9px; }
+.stamp.block { color: var(--red); background: var(--red-soft); }
+.stamp.escalate { color: var(--amber); background: var(--amber-soft); }
+.stamp.allow { color: var(--green); background: var(--green-soft); }
+.reason { margin-top: 16px; font-size: 15px; color: var(--muted); min-height: 1.4em; }
+.scene .reason { font-size: 22px; margin-top: 22px; }
+.rationale { margin-top: 12px; padding: 14px 16px; border-left: 4px solid var(--amber); background: var(--amber-soft); border-radius: 8px; font-size: 16px; opacity: 0; }
+.scene .rationale { display: none; }
+.t-ask { margin: 14px 0 0 34px; padding: 16px 20px; border: 2px solid #ffb340; border-radius: 12px; color: var(--term-ink); }
+.t-ask .h1 { color: #ffb340; font-weight: 700; }
+.t-ask .llm { margin-top: 8px; }
+.t-ask .llm b { color: #fff; }
+.t-ask .opts { margin-top: 10px; color: var(--term-muted); }
+.t-ask .opts b { color: #fff; }
+.history { margin-top: 18px; display: grid; gap: 6px; font-size: 14px; }
+.scene .history { display: none; }
+.h { display: grid; grid-template-columns: 90px 70px 1fr; gap: 10px; color: var(--muted); }
+.h b { font-weight: 700; }
+.h .block { color: var(--red); } .h .escalate { color: var(--amber); } .h .allow { color: var(--green); }
+.empty { color: var(--muted); padding: 30px 0; }
+@media (min-width: 900px) { body:not(.scene) .stage { max-width: 880px; margin: 0 auto; padding: 32px 16px; } }
+</style>
+</head>
+<body>
+<div class="stage">
+  <section class="term" aria-label="Agent terminal">
+    <div class="term-bar"><i></i><i></i><i></i><span class="mono">~/acme-app — claude</span></div>
+    <div class="term-body mono" id="term"></div>
+  </section>
+  <section class="panel" aria-label="Auto-Guard decision">
+    <div class="brand"><span class="dot"></span>Auto-Guard · Jev gate</div>
+    <div class="call mono" id="call"></div>
+    <div class="rows" id="rows"></div>
+    <div class="reason" id="reason"></div>
+    <div class="rationale" id="rationale"></div>
+    <div class="metrics">
+      <div class="metric"><div class="k">Added latency</div><div class="v" id="lat">–</div><div class="sub" id="latsub">per tool call</div></div>
+      <div class="metric"><div class="k">Cost</div><div class="v" id="cost">–</div><div class="sub" id="costsub">this call</div></div>
+    </div>
+    <div class="stamp" id="stamp"></div>
+    <div class="history" id="history"></div>
+  </section>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+if (params.get("theme")) document.documentElement.dataset.theme = params.get("theme");
+
+const ROWS = [
+  { key: "destructive", label: "Destructive", kind: "noul", bad: (v) => v > 0.5 },
+  { key: "in_scope", label: "In scope", kind: "noul", bad: (v) => v < 0.5, goodHigh: true },
+  { key: "sensitive", label: "Sensitive", kind: "noul", bad: (v) => v > 0.7 },
+  { key: "action_class", label: "Action class", kind: "choice" },
+  { key: "risk", label: "Risk", kind: "score" },
+];
+const RISK_NAMES = ["none", "low", "medium", "high", "critical"];
+const STAMP_TEXT = { block: "BLOCKED", escalate: "ESCALATE", allow: "ALLOWED" };
+
+$("rows").innerHTML = ROWS.map((r) =>
+  `<div class="row"><div class="label">${r.label}</div><div class="track"><div class="fill" id="f-${r.key}"></div></div><div class="val mono" id="v-${r.key}"></div></div>`
+).join("");
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const easeOut = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const money = (c) => c == null ? "–" : "$" + (c < 0.001 ? c.toFixed(6) : c.toFixed(4));
+
+// Render one decision `t` ms after its gate started. Pure function of (decision, t).
+function renderDecision(d, t, opts = {}) {
+  const L = d.latency_ms || 0;
+  const p = L ? easeOut(t / L) : 1; // bars fill over the real measured latency
+  const landed = t >= L;
+  $("call").innerHTML = `<span style="opacity:.6">${esc(d.tool)}</span>  ${esc(d.args)}`;
+  for (const r of ROWS) {
+    const a = (d.answers || {})[r.key];
+    const f = $("f-" + r.key), v = $("v-" + r.key);
+    if (!a) { f.style.width = "0"; v.textContent = ""; continue; }
+    let frac, text, cls = "";
+    if (r.kind === "noul") {
+      frac = a.noul; text = a.noul.toFixed(2);
+      cls = r.bad(a.noul) ? "bad" : (r.goodHigh ? "good" : "");
+    } else if (r.kind === "choice") {
+      frac = a.confidence ?? 1; text = a.choice;
+      cls = ["destructive", "privileged"].includes(a.choice) ? "bad" : "";
+    } else {
+      frac = a.score / 4; text = RISK_NAMES[Math.round(a.score)] || a.score.toFixed(1);
+      cls = a.score >= 3.5 ? "bad" : a.score >= 2.5 ? "warn" : a.score < 1.5 ? "good" : "";
+    }
+    f.className = "fill " + cls;
+    f.style.width = (frac * p * 100).toFixed(2) + "%";
+    v.textContent = landed ? text : "";
+  }
+  $("lat").textContent = Math.round(Math.min(t, L)) + "ms";
+  $("latsub").textContent = landed ? "Jev, one request, 5 questions" : "checking…";
+  $("cost").textContent = landed ? money(d.cost) : "$0.000000";
+  $("costsub").textContent = opts.costSub || "this call";
+  const s = $("stamp");
+  s.className = "stamp " + d.action;
+  s.textContent = STAMP_TEXT[d.action];
+  const st = t - L;
+  if (st < 0) { s.style.opacity = 0; }
+  else {
+    const k = easeOut(st / 140);
+    s.style.opacity = k;
+    s.style.transform = `translateX(-50%) rotate(-6deg) scale(${(1.7 - 0.7 * k).toFixed(4)})`;
+  }
+  $("reason").textContent = landed ? (d.reasons || []).join(" · ") : "";
+  const rat = $("rationale");
+  const rt = opts.rationaleAt != null ? t - opts.rationaleAt : (landed ? 1e9 : -1);
+  if (d.rationale && rt >= 0) {
+    rat.style.opacity = easeOut(rt / 250);
+    rat.innerHTML = `<b>${esc(opts.llmName || "LLM")}:</b> ${esc(d.rationale)}`;
+  } else { rat.style.opacity = 0; rat.textContent = ""; }
+}
+
+function clearPanel() {
+  $("call").textContent = "";
+  for (const r of ROWS) { $("f-" + r.key).style.width = "0"; $("v-" + r.key).textContent = ""; }
+  $("lat").textContent = "–"; $("cost").textContent = "–"; $("reason").textContent = "";
+  $("stamp").style.opacity = 0; $("rationale").style.opacity = 0;
+}
+
+// ---------- Scene mode: deterministic timeline for the video ----------
+const TYPE_MS = 700;      // command types in over this long
+const GATE_AT = 850;      // gate starts this long after a step begins
+const OUT_AFTER = 250;    // terminal shows the outcome this long after the stamp
+const HOLD = { block: 5000, escalate: 5200, allow: 3000 };
+
+function buildTimeline(scene) {
+  let t = 0;
+  const steps = scene.steps.map((s, i) => {
+    const d = s.decision;
+    const start = t;
+    const gate = start + GATE_AT;
+    const stamp = gate + (d.latency_ms || 0);
+    const rationale = d.rationale ? stamp + (d.escalation_latency_ms || 900) : null; // real LLM latency
+    t = stamp + HOLD[d.action] + (d.rationale ? 1200 : 0);
+    return { ...s, i, start, gate, stamp, rationale, end: t };
+  });
+  return { steps, duration: t };
+}
+
+function outcomeText(s) {
+  const d = s.decision;
+  if (d.action === "block") return ["block", "Blocked by Auto-Guard: " + (d.reasons[0] || "")];
+  if (d.action === "escalate") return ["", "Auto-Guard: unsure, asking Claude Haiku for a reason…"];
+  return ["allow", "Done."];
+}
+
+function renderScene(scene, tl, t) {
+  let html = `<div class="t-user"><b>&gt;</b> ${esc(scene.task)}</div>`;
+  let active = tl.steps[0];
+  for (const s of tl.steps) {
+    if (t < s.start) break;
+    active = s;
+    const lt = t - s.start;
+    const n = Math.floor(s.args.length * clamp(lt / TYPE_MS));
+    const typing = lt < TYPE_MS;
+    html += `<div class="t-say"><span class="t-dot">⏺</span> ${esc(s.say)}</div>`;
+    html += `<div class="t-call"><span class="t-dot">⏺</span> <span class="name">${esc(s.tool)}</span>(<span class="t-cmd">${esc(s.args.slice(0, n))}</span>${typing ? '<span class="caret"></span>' : ""})</div>`;
+    if (t >= s.stamp + OUT_AFTER) {
+      const [cls, text] = outcomeText(s);
+      if (s.rationale != null && t >= s.rationale) {
+        html += `<div class="t-ask"><div class="h1">Auto-Guard needs your approval</div>` +
+          `<div class="llm"><b>Claude Haiku</b> <span class="t-dot">(${(s.decision.escalation_latency_ms / 1000).toFixed(1)}s · ${money(s.decision.escalation_cost)})</span><b>:</b> ${esc(s.decision.rationale)}</div>` +
+          `<div class="opts"><b>❯ 1. Yes</b>   2. No</div></div>`;
+      } else {
+        html += `<div class="t-out ${cls}">⎿ ${esc(text)}</div>`;
+      }
+    } else if (t >= s.gate) {
+      html += `<div class="t-out">⎿ Auto-Guard checking…</div>`;
+    }
+  }
+  $("term").innerHTML = html;
+  if (t < active.gate) {
+    clearPanel();
+    $("call").innerHTML = `<span style="opacity:.6">${esc(active.tool)}</span>  ${esc(active.args.slice(0, Math.floor(active.args.length * clamp((t - active.start) / TYPE_MS))))}`;
+    if (active.i > 0) {
+      const prev = tl.steps[active.i - 1];
+      $("cost").textContent = money(tl.steps.slice(0, active.i).reduce((a, s) => a + (s.decision.cost || 0), 0));
+      $("costsub").textContent = "session total";
+    }
+  } else {
+    const sessionCost = tl.steps.slice(0, active.i + 1).reduce((a, s) => a + (s.decision.cost || 0), 0);
+    renderDecision(active.decision, t - active.gate, {
+      rationaleAt: active.rationale != null ? active.rationale - active.gate : null,
+      llmName: "Claude Haiku (escalation)",
+      costSub: active.i > 0 ? `session total ${money(sessionCost)}` : "this call",
+    });
+  }
+}
+
+async function sceneMode(name) {
+  document.body.classList.add("scene");
+  const scene = await (await fetch("/scenes/" + name + ".json")).json();
+  const tl = buildTimeline(scene);
+  window.__timeline = {
+    duration: tl.duration,
+    steps: tl.steps.map((s) => ({ action: s.decision.action, start: s.start, gate: s.gate, stamp: s.stamp,
+      rationale: s.rationale, end: s.end, latency_ms: s.decision.latency_ms, cost: s.decision.cost })),
+  };
+  window.__seek = (t) => renderScene(scene, tl, t);
+  window.__seek(0);
+  if (!params.has("still")) {
+    const t0 = performance.now();
+    const loop = () => { window.__seek((performance.now() - t0) % (tl.duration + 1500)); requestAnimationFrame(loop); };
+    if (!params.has("capture")) requestAnimationFrame(loop);
+  }
+  await document.fonts.ready;
+  window.__ready = true;
+}
+
+// ---------- Live mode: follow the decision log ----------
+function liveMode() {
+  const history = [];
+  let current = null, currentAt = 0, total = 0;
+  $("history").innerHTML = '<div class="empty">Waiting for tool calls… run <span class="mono">autoguard demo</span> or use Claude Code with the hook installed.</div>';
+  const es = new EventSource("/events");
+  es.onmessage = (e) => {
+    const d = JSON.parse(e.data);
+    total += (d.cost || 0) + (d.escalation_cost || 0);
+    history.unshift(d);
+    current = d; currentAt = performance.now();
+    $("history").innerHTML = history.slice(0, 12).map((h) =>
+      `<div class="h mono"><b class="${h.action}">${h.action.toUpperCase()}</b><span>${Math.round(h.latency_ms || 0)}ms</span><span>${esc(h.args).slice(0, 90)}</span></div>`
+    ).join("");
+  };
+  const loop = () => {
+    if (current) renderDecision(current, performance.now() - currentAt, { costSub: "session total " + money(total), llmName: "LLM" });
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+}
+
+params.get("scene") ? sceneMode(params.get("scene")) : liveMode();
+</script>
+</body>
+</html>

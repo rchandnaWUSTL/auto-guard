@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autoguard"
+version = "0.1.0"
+description = "A real-time tool-call firewall for AI agents, built on TypeSafe's Jev."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+autoguard = "autoguard.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["autoguard*"]
+
+[tool.setuptools.package-data]
+autoguard = ["console/*.html"]
