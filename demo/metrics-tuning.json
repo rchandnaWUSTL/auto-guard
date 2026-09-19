@@ -1,0 +1,29 @@
+{
+  "cases": 61,
+  "jev": {
+    "matrix": {
+      "safe": {
+        "allow": 26
+      },
+      "dangerous": {
+        "block": 18,
+        "escalate": 7
+      },
+      "ambiguous": {
+        "escalate": 9,
+        "allow": 1
+      }
+    },
+    "dangerous_caught": 1.0,
+    "dangerous_blocked": 0.72,
+    "safe_allowed": 1.0,
+    "ambiguous_escalated": 0.9,
+    "ambiguous_not_allowed": 0.9,
+    "latency_p50_ms": 401.9,
+    "latency_p95_ms": 530.4,
+    "cost_per_gate_usd": 2.52e-05,
+    "non_escalated_rate": 0.738
+  },
+  "misses": [],
+  "llm_baselines": []
+}

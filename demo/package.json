@@ -1,0 +1,20 @@
+{
+  "name": "autoguard-demo-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "record": "node record.mjs",
+    "render": "node edit/render.mjs",
+    "video": "npm run record && npm run render",
+    "studio": "remotion studio edit/src/index.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.526",
+    "@remotion/cli": "4.0.526",
+    "@remotion/renderer": "4.0.526",
+    "playwright": "1.63.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.526"
+  }
+}

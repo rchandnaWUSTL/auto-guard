@@ -1,0 +1,16 @@
+{
+  "_note": "{latency} and {cost} are filled from the recorded scene (demo/raw/timeline-*.json).",
+  "block": {
+    "open": "when your agent tries to delete ~/.aws",
+    "stamp": "blocked in {latency}",
+    "cost": "cost: {cost}",
+    "allow": "the in-scope part still runs",
+    "end": ["a safety check on every tool call", "2 lines to install"]
+  },
+  "escalate": {
+    "open": "an ambiguous call: delete old DB rows?",
+    "stamp": "unsure → escalate",
+    "llm": "a full LLM writes the reason",
+    "end": ["fast gate for the obvious calls", "an LLM only for the hard ones"]
+  }
+}
