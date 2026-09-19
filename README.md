@@ -3,7 +3,7 @@
 A real-time firewall for AI agent tool calls. Before a tool runs, Auto-Guard sends the proposed call and the user's request to [TypeSafe's Jev](https://typesafe.ai). Jev answers five safety questions in one request. Auto-Guard then returns **allow**, **block** or **escalate**.
 
 ```
-pip install git+https://github.com/<you>/<repo>
+pip install git+https://github.com/rchandnaWUSTL/auto-guard
 autoguard install
 ```
 
