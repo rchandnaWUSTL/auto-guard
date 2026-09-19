@@ -81,7 +81,7 @@ def main(stdin=sys.stdin, stdout=sys.stdout):
         return 0  # Not our input; stay out of the way.
     tool_name = event.get("tool_name", "")
     task = last_user_message(event.get("transcript_path"))
-    decision = guard(tool_name, describe(tool_name, event.get("tool_input")), task=task)
+    decision = guard(tool_name, describe(tool_name, event.get("tool_input")), task=task, cwd=event.get("cwd"))
     out = respond(decision)
     if out:
         json.dump(out, stdout)

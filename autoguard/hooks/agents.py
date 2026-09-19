@@ -89,6 +89,16 @@ def parse(agent, event):
     return tool, describe(tool, event.get("tool_input")), task
 
 
+def event_cwd(agent, event):
+    """The agent's working directory, so relative paths resolve where the command will run."""
+    if agent == "windsurf":
+        return (event.get("tool_info") or {}).get("cwd")
+    if agent == "cursor" and not event.get("cwd"):
+        roots = event.get("workspace_roots") or []
+        return roots[0] if roots else None
+    return event.get("cwd")
+
+
 # ---------- render: decision -> (stdout object or None, exit code, stderr text) ----------
 
 def render(agent, event, decision):
@@ -136,7 +146,7 @@ def main(agent="claude", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr):
     tool, args, task = parse(agent, event)
     if not args:
         return 0
-    decision = guard(tool, args, task=task)
+    decision = guard(tool, args, task=task, cwd=event_cwd(agent, event))
     out, code, err = render(agent, event, decision)
     if out is not None:
         json.dump(out, stdout)

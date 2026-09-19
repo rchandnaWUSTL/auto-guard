@@ -8,6 +8,7 @@ from . import escalate as _escalate
 from . import jev
 from . import log as _log
 from . import policy as _policy
+from .resolve import resolve
 
 ALLOW, BLOCK, ESCALATE = "allow", "block", "escalate"
 
@@ -64,6 +65,7 @@ class Decision:
     rationale: Optional[str] = None
     escalation_cost: Optional[float] = None
     escalation_latency_ms: Optional[float] = None
+    resolved: str = ""
     error: Optional[str] = None
 
     @property
@@ -74,7 +76,10 @@ class Decision:
         return asdict(self)
 
 
-def build_state(tool, args, task="", plan=""):
+SHELL_TOOLS = {"bash", "shell", "run_shell_command", "exec_command"}
+
+
+def build_state(tool, args, task="", plan="", resolved=""):
     if not isinstance(args, str):
         args = json.dumps(args, ensure_ascii=False)
     lines = [
@@ -83,11 +88,13 @@ def build_state(tool, args, task="", plan=""):
         "Proposed tool: " + tool,
         "Proposed arguments: " + args[:4000],
     ]
+    if resolved:
+        lines.append(resolved)
     return "\n".join(lines), args
 
 
-def decide(answers, policy):
-    """Pure policy step: Jev answers -> (action, reasons)."""
+def decide(answers, policy, unresolved=()):
+    """Pure policy step: Jev answers (+ anything the resolver couldn't see) -> (action, reasons)."""
     destructive = answers["destructive"]["noul"]
     in_scope = answers["in_scope"]["noul"]
     sensitive = answers["sensitive"]["noul"]
@@ -111,6 +118,8 @@ def decide(answers, policy):
         esc.append("risk %.1f/4 is high" % risk)
     if sensitive > policy["escalate_sensitive"]:
         esc.append("touches sensitive systems (%.2f)" % sensitive)
+    if unresolved and (destructive > policy["escalate_unresolved_destructive"] or action_class in ("destructive", "privileged")):
+        esc.append("can't see what %s points to before it runs" % ", ".join(unresolved[:3]))
     if action_class in policy["escalate_classes"]:
         esc.append("%s action" % action_class)
     if confidence < policy["min_confidence"]:
@@ -120,20 +129,26 @@ def decide(answers, policy):
     return ALLOW, ["%s, risk %.1f/4" % (action_class, risk)]
 
 
-def guard(tool, args, task="", plan="", policy=None, log=True, explain=True):
-    """Gate one proposed tool call. Returns a Decision; check decision.action."""
+def guard(tool, args, task="", plan="", policy=None, log=True, explain=True, cwd=None):
+    """Gate one proposed tool call. Returns a Decision; check decision.action.
+
+    For shell commands, paths, symlinks, globs and variables are resolved against `cwd`
+    first (read-only), so Jev judges what the command will touch, not just its text."""
     policy = _policy.load(policy)
-    state, args_str = build_state(tool, args, task, plan)
+    res = resolve(args, cwd) if tool.lower() in SHELL_TOOLS and isinstance(args, str) else None
+    resolved = res.as_text() if res else ""
+    unresolved = res.unresolved if res else []
+    state, args_str = build_state(tool, args, task, plan, resolved)
     try:
         result = jev.ask(state, QUESTIONS, timeout=policy["timeout_s"])
     except jev.JevError as e:
         action = policy["on_error"]
         decision = Decision(action, ["Jev unavailable, policy on_error=%s" % action], tool, args_str, task, error=str(e))
     else:
-        action, reasons = decide(result["answers"], policy)
+        action, reasons = decide(result["answers"], policy, unresolved)
         decision = Decision(
             action, reasons, tool, args_str, task,
-            answers=result["answers"], latency_ms=result["latency_ms"], cost=result["cost"],
+            answers=result["answers"], latency_ms=result["latency_ms"], cost=result["cost"], resolved=resolved,
         )
     if decision.action == ESCALATE and explain and policy.get("escalation_model"):
         if _log.total_spend() < policy["spend_cap_usd"]:

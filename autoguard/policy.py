@@ -22,6 +22,8 @@ DEFAULTS = {
     "escalate_sensitive": 0.7,
     # Escalate when Jev's confidence on action_class or risk is below this.
     "min_confidence": 0.3,
+    # Escalate a probably-destructive shell command that uses variables or $(...) we can't resolve.
+    "escalate_unresolved_destructive": 0.5,
     # Always escalate these action classes (Jev's action_class answer).
     "escalate_classes": ["privileged"],
     # For agents whose hooks can't ask you (Codex, Gemini CLI, Windsurf): "block" or "allow" escalations.

@@ -3,6 +3,7 @@
 import http.client
 import json
 import os
+import threading
 import time
 import urllib.parse
 from pathlib import Path
@@ -21,7 +22,8 @@ PROVIDERS = {
 }
 
 _ENV_LOADED = False
-_CONNS = {}  # host -> HTTPSConnection, reused across calls in one process
+_ENV_LOCK = threading.Lock()
+_LOCAL = threading.local()  # per-thread {host: HTTPSConnection}; a connection can't be shared across threads
 
 
 class JevError(Exception):
@@ -32,9 +34,13 @@ def load_env():
     """Load KEY=VALUE lines from the nearest .env.local/.env (walking up from cwd)
     and ~/.autoguard/env. Existing environment variables win."""
     global _ENV_LOADED
-    if _ENV_LOADED:
-        return
-    _ENV_LOADED = True
+    with _ENV_LOCK:
+        if not _ENV_LOADED:
+            _load_env_files()
+            _ENV_LOADED = True  # only after loading, so other threads never see a half-loaded env
+
+
+def _load_env_files():
     candidates = []
     here = Path.cwd().resolve()
     for d in [here, *here.parents]:
@@ -64,10 +70,11 @@ def provider():
 def _post(url, body, headers, timeout):
     """POST over a kept-alive connection; reconnect once if the old one went stale."""
     u = urllib.parse.urlsplit(url)
+    conns = _LOCAL.__dict__.setdefault("conns", {})
     for attempt in (0, 1):
-        conn = _CONNS.get(u.netloc)
+        conn = conns.get(u.netloc)
         if conn is None:
-            conn = _CONNS[u.netloc] = http.client.HTTPSConnection(u.netloc, timeout=timeout)
+            conn = conns[u.netloc] = http.client.HTTPSConnection(u.netloc, timeout=timeout)
         conn.timeout = timeout
         try:
             conn.request("POST", u.path, body=body, headers=headers)
@@ -75,7 +82,7 @@ def _post(url, body, headers, timeout):
             return res.status, res.read()
         except (http.client.HTTPException, OSError):
             conn.close()
-            _CONNS.pop(u.netloc, None)
+            conns.pop(u.netloc, None)
             if attempt:
                 raise
 

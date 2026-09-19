@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agent-autoguard"
-version = "0.2.0"
+version = "0.3.0"
 description = "A real-time tool-call firewall for AI agents, built on TypeSafe's Jev."
 readme = "README.md"
 requires-python = ">=3.9"
