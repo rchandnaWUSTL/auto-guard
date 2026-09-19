@@ -25,9 +25,13 @@ def last_user_message(transcript_path, max_bytes=512_000):
             rec = json.loads(line)
         except ValueError:
             continue
-        if rec.get("type") != "user":
+        # Claude Code: {"type": "user", "message": {...}}; other agents: {"role": "user", "content": ...}
+        if rec.get("type") == "user":
+            content = (rec.get("message") or {}).get("content")
+        elif rec.get("role") == "user":
+            content = rec.get("content")
+        else:
             continue
-        content = (rec.get("message") or {}).get("content")
         if isinstance(content, str) and content.strip():
             return content.strip()[:2000]
         if isinstance(content, list):

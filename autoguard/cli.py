@@ -9,30 +9,85 @@ from pathlib import Path
 MATCHER = "Bash|Edit|Write|MultiEdit|NotebookEdit|WebFetch"
 
 
-def hook_command():
-    return "%s -m autoguard hook" % shlex.quote(sys.executable)
+def hook_command(agent="claude"):
+    cmd = "%s -m autoguard hook" % shlex.quote(sys.executable)
+    return cmd if agent == "claude" else cmd + " --agent " + agent
+
+
+def _is_ours(entry):
+    return "autoguard hook" in json.dumps(entry)
+
+
+def _replace(entries, new_entry, nested):
+    """Drop earlier Auto-Guard entries (so re-running install doesn't stack hooks), then add ours."""
+    if nested:
+        for entry in entries:
+            entry["hooks"] = [h for h in entry.get("hooks", []) if not _is_ours(h)]
+        entries[:] = [e for e in entries if e.get("hooks")]
+    else:
+        entries[:] = [e for e in entries if not _is_ours(e)]
+    entries.append(new_entry)
+
+
+# agent -> (project config, user config, how to add the hook)
+def _config(agent, user):
+    home, cwd = Path.home(), Path.cwd()
+    cmd = hook_command(agent)
+    if agent == "claude":
+        path = home / ".claude" / "settings.json" if user else cwd / ".claude" / "settings.json"
+        events = {"PreToolUse": ({"matcher": MATCHER, "hooks": [{"type": "command", "command": cmd, "timeout": 30}]}, True)}
+        gated = MATCHER.replace("|", ", ")
+    elif agent == "codex":
+        path = home / ".codex" / "hooks.json" if user else cwd / ".codex" / "hooks.json"
+        events = {"PreToolUse": ({"matcher": "Bash|apply_patch|Edit|Write|mcp__.*", "hooks": [
+            {"type": "command", "command": cmd, "timeout": 30, "statusMessage": "Auto-Guard checking"}]}, True)}
+        gated = "shell commands, patches and MCP tools"
+    elif agent == "gemini":
+        path = home / ".gemini" / "settings.json" if user else cwd / ".gemini" / "settings.json"
+        events = {"BeforeTool": ({"matcher": "run_shell_command|write_file|replace|mcp_.*", "hooks": [
+            {"name": "autoguard", "type": "command", "command": cmd, "timeout": 30000}]}, True)}
+        gated = "shell commands, file writes and MCP tools"
+    elif agent == "cursor":
+        path = home / ".cursor" / "hooks.json" if user else cwd / ".cursor" / "hooks.json"
+        events = {
+            "beforeShellExecution": ({"command": cmd, "timeout": 30}, False),
+            "beforeMCPExecution": ({"command": cmd, "timeout": 30}, False),
+            "preToolUse": ({"command": cmd, "timeout": 30, "matcher": "Write"}, False),
+        }
+        gated = "shell commands, MCP tools and file writes"
+    elif agent == "copilot":
+        path = home / ".copilot" / "hooks" / "autoguard.json" if user else cwd / ".github" / "hooks" / "autoguard.json"
+        events = {"preToolUse": ({"type": "command", "bash": cmd, "timeoutSec": 30}, False)}
+        gated = "every tool call"
+    elif agent == "windsurf":
+        path = home / ".codeium" / "windsurf" / "hooks.json" if user else cwd / ".windsurf" / "hooks.json"
+        events = {name: ({"command": cmd}, False) for name in ("pre_run_command", "pre_write_code", "pre_mcp_tool_use")}
+        gated = "shell commands, file writes and MCP tools"
+    else:
+        raise SystemExit("unknown agent %r" % agent)
+    return path, events, gated
 
 
 def cmd_install(args):
-    path = Path.home() / ".claude" / "settings.json" if args.user else Path.cwd() / ".claude" / "settings.json"
+    path, events, gated = _config(args.agent, args.user)
     settings = json.loads(path.read_text()) if path.is_file() else {}
-    entries = settings.setdefault("hooks", {}).setdefault("PreToolUse", [])
-    command = hook_command()
-    # Drop any earlier Auto-Guard entry so re-running install doesn't stack hooks.
-    for entry in entries:
-        entry["hooks"] = [h for h in entry.get("hooks", []) if "autoguard" not in h.get("command", "")]
-    entries[:] = [e for e in entries if e.get("hooks")]
-    entries.append({"matcher": MATCHER, "hooks": [{"type": "command", "command": command, "timeout": 30}]})
+    if args.agent in ("cursor", "copilot"):
+        settings.setdefault("version", 1)
+    hooks = settings.setdefault("hooks", {})
+    for event, (entry, nested) in events.items():
+        _replace(hooks.setdefault(event, []), entry, nested)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(settings, indent=2) + "\n")
-    print("Auto-Guard installed in %s" % path)
-    print("Gating: %s" % MATCHER.replace("|", ", "))
+    print("Auto-Guard installed for %s in %s" % (args.agent, path))
+    print("Gating: %s" % gated)
+    if args.agent == "codex":
+        print("Codex runs new hooks only after you trust them: open Codex and run /hooks.")
     print("Watch decisions live: autoguard console")
 
 
 def cmd_hook(args):
-    from .hooks.claude_code import main
-    return main()
+    from .hooks.agents import main
+    return main(args.agent)
 
 
 def cmd_check(args):
@@ -70,11 +125,15 @@ def main(argv=None):
     p = argparse.ArgumentParser(prog="autoguard", description="Real-time tool-call firewall on Jev.")
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    s = sub.add_parser("install", help="add the Claude Code PreToolUse hook")
-    s.add_argument("--user", action="store_true", help="install in ~/.claude/settings.json (all projects)")
+    from .hooks.agents import AGENTS
+    s = sub.add_parser("install", help="add the pre-tool hook to a coding agent")
+    s.add_argument("--agent", choices=AGENTS, default="claude", help="which coding agent (default: claude)")
+    s.add_argument("--user", action="store_true", help="install for all projects instead of this one")
     s.set_defaults(fn=cmd_install)
 
-    sub.add_parser("hook", help="run as a Claude Code hook (reads stdin)").set_defaults(fn=cmd_hook)
+    s = sub.add_parser("hook", help="run as a coding agent hook (reads stdin)")
+    s.add_argument("--agent", choices=AGENTS, default="claude")
+    s.set_defaults(fn=cmd_hook)
     sub.add_parser("check", help="gate two sample calls to verify your key").set_defaults(fn=cmd_check)
 
     s = sub.add_parser("eval", help="score the policy on labeled tool calls")
