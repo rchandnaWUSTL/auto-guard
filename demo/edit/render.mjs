@@ -24,6 +24,8 @@ const serveUrl = await bundle({
 });
 
 const jobs = [
+  ["Hero", "auto-guard.mp4"],
+  ["HeroTech", "auto-guard-under-the-hood.mp4"],
   ["Landscape", "auto-guard-landscape-1920x1080.mp4"],
   ["Square", "auto-guard-square-1080x1080.mp4"],
   ["Escalate", "auto-guard-escalate.mp4"],

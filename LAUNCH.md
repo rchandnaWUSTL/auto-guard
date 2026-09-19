@@ -3,11 +3,12 @@
 Nothing here has been posted. A human posts it.
 
 **Assets** (in `demo/out/`)
-- `auto-guard-landscape-1920x1080.mp4`: primary video for X (13.0s, loops)
-- `auto-guard-square-1080x1080.mp4`: square version (13.0s, loops)
-- `auto-guard-escalate.mp4`: reply clip for tweet 3 (10.0s)
+- `auto-guard.mp4`: main tweet video (14s, loops, no captions)
+- `auto-guard-under-the-hood.mp4`: reply video with Jev's five answers and the timing race against Claude Sonnet 5 (17.6s, loops)
 
-To regenerate all three: `cd demo && npm run video`.
+To regenerate them: `cd demo && npm run render` (or `node edit/render.mjs Hero HeroTech`).
+
+**Install:** `pip install agent-autoguard` ([PyPI](https://pypi.org/project/agent-autoguard/)), MIT licensed.
 
 ## Read first: what I changed from the draft and why
 
@@ -28,61 +29,46 @@ If you'd rather post the draft's numbers, don't: people will run it, measure abo
 
 ---
 
-## Primary tweet (post with the landscape video)
+## The thread
 
-> Your coding agent is one bad instruction away from `rm -rf ~/.aws`.
->
-> Auto-Guard checks every tool call before it runs. This one got blocked in 419ms, for $0.000025.
->
-> Every agent should have this. The "is this dangerous?" check mostly lives inside closed harnesses. This one is open, and it's 2 lines in yours.
->
-> install 👇 https://github.com/rchandnaWUSTL/auto-guard
+The repo link stays out of tweet 1 (X shows posts with links to fewer people). It goes in tweet 3.
 
-## Thread (reply to your own tweet, in order)
+**Tweet 1** (attach `auto-guard.mp4`)
+> Your coding agent is one bad instruction away from running rm -rf ~/.aws.
+>
+> I built Auto-Guard to check every tool call before it runs. Here it stops the credentials delete and lets the build cleanup through.
+>
+> It's open source. Install is in the replies.
 
-**2/**
-> It's not an LLM babysitter. That's too slow and too pricey to run on every call.
+**Tweet 2** (reply, attach `auto-guard-under-the-hood.mp4`)
+> Each check is one request to Jev (@typesafeai). It answers five questions at once: is it destructive, did you ask for it, does it touch secrets, what kind of action is it, how risky is it.
 >
-> It's a System One model (Jev, @typesafeai): 5 typed safety questions answered in one request, with calibrated confidence.
->
-> Measured: ~5x faster and ~13x cheaper than asking Claude Sonnet the same thing. Small enough to run on every call.
+> It took 419ms and cost $0.000025. Claude Sonnet 5 takes about 2 seconds and 13x the cost.
 
-**3/** (attach `auto-guard-escalate.mp4`)
-> "so it's just a classifier"
+**Tweet 3** (reply)
+> If Jev isn't confident, Auto-Guard asks you to approve the call and shows a one-line reason from a larger model.
 >
-> Here's an ambiguous call: delete old DB rows. Jev isn't sure, so it escalates, and a full LLM writes the reason you see before approving.
+> Adding it to Claude Code takes two commands:
+> pip install agent-autoguard
+> autoguard install
 >
-> The fast gate settles the obvious calls. The expensive model only comes in when it's actually unclear.
->
-> (Scripted demo, real Jev + Claude responses. Evals in the repo.)
+> Code, evals and known limits: https://github.com/rchandnaWUSTL/auto-guard
 
-**4/**
-> 2 lines to add it to Claude Code:
-> `pip install git+https://github.com/rchandnaWUSTL/auto-guard`
-> `autoguard install`
->
-> Or wrap any agent:
-> `from autoguard import guard`
-> `guard("bash", cmd, task=user_request).action  # allow / block / escalate`
->
-> Built on @typesafeai Jev.
+Lengths: 253, 279 and 259 characters. Tweet 2 is close to the limit.
 
 ## Alternate opening hooks (A/B, pick one for tweet 1)
 
 - **Stat-led:**
-  > A safety check on every tool call your agent makes. ~0.4s. $0.000025. ~13x cheaper than asking an LLM "is this safe?", so you can actually run it on every call. [video]
+  > Every tool call your agent makes can get a safety check that takes about 0.4s and costs $0.000025, which is cheap enough to leave on for every call. [video]
 - **Hot take, invites replies:**
-  > Your coding agent will eventually run a command that nukes something. The guardrail that stops it shouldn't be locked inside a closed harness. Here's an open one, 2 lines to install: [video]
+  > Sooner or later your coding agent will run a command that deletes something it shouldn't. The check that stops it shouldn't only exist inside closed tools, so I built an open one. [video]
 
 ## Posting notes (for the human)
 
 - **When:** Tuesday about 9am ET (next one: Sep 22, 2026). Check that no major model launch is happening that day.
 - **Replies:** answer the first 10–15 comments within the first hour. Reply chains are the highest-ranked signal.
-- **"2 lines" is literally true now:** `pip install` + `autoguard install` writes the Claude Code hook for you. The `guard()` library call is also two lines.
-- **Before posting:**
-  - Repo link is filled in: https://github.com/rchandnaWUSTL/auto-guard
-  - The repo is already **public** but empty. Push the code (merge the `auto-guard` branch to `main`) before posting.
-  - Run the 2-line install from a clean machine.
+- **Two commands is literally true:** `pip install agent-autoguard` + `autoguard install` writes the Claude Code hook for you.
+- **Before posting:** run `pip install agent-autoguard` and `autoguard install` on a machine that has never had it, and open the repo link logged out to check it looks right.
 - **Have the limits section ready to link** (README → "Limits"). Expect "false negatives?" and "why not just a sandbox?" replies, and answer with it rather than arguing.
 - **Likely pushback, with honest answers:**
   - *"400ms isn't real-time."* It's per tool call, and next to the agent's own multi-second model turns it's invisible.

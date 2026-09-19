@@ -3,12 +3,26 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "autoguard"
+name = "agent-autoguard"
 version = "0.1.0"
 description = "A real-time tool-call firewall for AI agents, built on TypeSafe's Jev."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = []
+license = { text = "MIT" }
+authors = [{ name = "Roshan Chandna" }]
+keywords = ["ai-agents", "claude-code", "guardrails", "tool-calls", "jev", "typesafe"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Security",
+]
+
+[project.urls]
+Homepage = "https://github.com/rchandnaWUSTL/auto-guard"
+Issues = "https://github.com/rchandnaWUSTL/auto-guard/issues"
 
 [project.scripts]
 autoguard = "autoguard.cli:main"

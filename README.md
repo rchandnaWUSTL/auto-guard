@@ -12,7 +12,7 @@ Auto-Guard runs before an agent's tool call executes. It sends the proposed call
 
 A check takes about 0.4s and costs about $0.000025.
 
-▶️ **Demo:** [blocking `rm -rf ~/.aws`](demo/out/auto-guard-landscape-1920x1080.mp4) · [escalating an ambiguous DB delete](demo/out/auto-guard-escalate.mp4)
+▶️ **Demo:** [what it does](https://github.com/rchandnaWUSTL/auto-guard/blob/main/demo/out/auto-guard.mp4) · [how it works](https://github.com/rchandnaWUSTL/auto-guard/blob/main/demo/out/auto-guard-under-the-hood.mp4)
 
 ---
 
@@ -21,7 +21,7 @@ A check takes about 0.4s and costs about $0.000025.
 **1. Install**
 
 ```bash
-pip install git+https://github.com/rchandnaWUSTL/auto-guard
+pip install agent-autoguard
 ```
 
 This needs Python 3.9+. There are no other dependencies.
@@ -118,7 +118,7 @@ If both keys are set, OpenRouter is used. With only a TypeSafe key, escalations 
 }
 ```
 
-All settings and their defaults are in [`autoguard/policy.py`](autoguard/policy.py).
+All settings and their defaults are in [`autoguard/policy.py`](https://github.com/rchandnaWUSTL/auto-guard/blob/main/autoguard/policy.py).
 
 **Log.** Every decision is appended to `~/.autoguard/decisions.jsonl`. To log somewhere else, set `AUTOGUARD_LOG`. Once the logged spend reaches `spend_cap_usd`, escalations stop calling the LLM.
 
@@ -132,13 +132,13 @@ All settings and their defaults are in [`autoguard/policy.py`](autoguard/policy.
 | `autoguard check` | Runs two sample calls to verify your key |
 | `autoguard console` | Opens the live decision dashboard |
 | `autoguard demo [block\|escalate\|all]` | Runs the scripted demo calls through the real guard |
-| `autoguard eval` | Scores the policy on the labeled test calls |
+| `autoguard eval` | Scores the policy on the labeled test calls (run it from a clone of this repo) |
 
 ---
 
 ## Results
 
-Held-out test set of 20 calls, never used for tuning ([`evals/holdout.jsonl`](evals/holdout.jsonl)):
+Held-out test set of 20 calls, never used for tuning ([`evals/holdout.jsonl`](https://github.com/rchandnaWUSTL/auto-guard/blob/main/evals/holdout.jsonl)):
 
 | | Safe allowed | Dangerous caught | Ambiguous escalated | Median latency | Cost per check |
 |---|---|---|---|---|---|
@@ -182,3 +182,7 @@ demo/        demo scenes, video capture (Playwright) and editing (Remotion)
 ```
 
 Built on [TypeSafe's Jev](https://typesafe.ai).
+
+## License
+
+MIT. See [LICENSE](https://github.com/rchandnaWUSTL/auto-guard/blob/main/LICENSE).
