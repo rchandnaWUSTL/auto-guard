@@ -42,7 +42,7 @@ def cmd_check(args):
         ("Bash", "ls -la build/", "clean up the build directory"),
     ]:
         d = guard(tool, call, task=task, log=False, explain=False)
-        print("%-8s %6sms  $%s  %s" % (d.action.upper(), d.latency_ms, d.cost, call))
+        print("%-8s %5.0fms  $%.6f  %s" % (d.action.upper(), d.latency_ms or 0, d.cost or 0, call))
         if d.error:
             print("  error:", d.error)
             return 1

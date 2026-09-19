@@ -1,97 +1,184 @@
 # Auto-Guard
 
-A real-time firewall for AI agent tool calls. Before a tool runs, Auto-Guard sends the proposed call and the user's request to [TypeSafe's Jev](https://typesafe.ai). Jev answers five safety questions in one request. Auto-Guard then returns **allow**, **block** or **escalate**.
+**A safety check on every tool call your AI agent makes.**
 
-```
+Auto-Guard runs before an agent's tool call executes. It sends the proposed call and the user's request to [Jev](https://typesafe.ai), TypeSafe's fast decision model, and gets back one of three verdicts:
+
+| Verdict | What happens |
+|---|---|
+| 🟢 **allow** | The call runs normally. |
+| 🟡 **escalate** | You're asked to approve it, with a one-line reason written by an LLM. |
+| 🔴 **block** | The call never runs. The agent is told why and picks another approach. |
+
+A check takes about 0.4s and costs about $0.000025.
+
+▶️ **Demo:** [blocking `rm -rf ~/.aws`](demo/out/auto-guard-landscape-1920x1080.mp4) · [escalating an ambiguous DB delete](demo/out/auto-guard-escalate.mp4)
+
+---
+
+## Quick start (Claude Code)
+
+**1. Install**
+
+```bash
 pip install git+https://github.com/rchandnaWUSTL/auto-guard
+```
+
+This needs Python 3.9+. There are no other dependencies.
+
+**2. Add an API key.** An [OpenRouter key](https://openrouter.ai/keys) is the easiest option:
+
+```bash
+mkdir -p ~/.autoguard && echo 'OPENROUTER_API_KEY=sk-or-...' >> ~/.autoguard/env
+```
+
+**3. Turn it on** in your project. Add `--user` to turn it on for every project:
+
+```bash
 autoguard install
 ```
 
-That adds a `PreToolUse` hook to `.claude/settings.json`, so Claude Code's `Bash`, `Edit`, `Write`, `MultiEdit`, `NotebookEdit` and `WebFetch` calls are gated from then on. Add `--user` to gate every project.
+That's it. Claude Code now checks every `Bash`, `Edit`, `Write`, `MultiEdit`, `NotebookEdit` and `WebFetch` call before it runs.
 
-- **Block:** the call is denied, and Claude sees the reason and picks another route.
-- **Escalate:** you get Claude Code's permission prompt, with a one-line reason written by Claude Haiku.
-- **Allow:** Auto-Guard stays out of the way, and Claude Code's normal permission rules still apply. It only ever adds restrictions and never auto-approves anything.
+To confirm it works:
 
-## Use it in your own agent
+```bash
+autoguard check
+# BLOCK      402ms  $0.000025  rm -rf /tmp/build && rm -rf ~/.aws
+# ALLOW      402ms  $0.000025  ls -la build/
+```
+
+To watch decisions live, run `autoguard console` and open http://127.0.0.1:8787.
+
+> Auto-Guard only adds restrictions. When it allows a call, Claude Code's normal permission rules still apply, and it never auto-approves anything.
+
+---
+
+## Use it in any agent
 
 ```python
 from autoguard import guard
 
 decision = guard("bash", "rm -rf ./build && rm -rf ~/.aws", task="clean up the build directory")
-decision.action     # "block"
-decision.reasons    # ['risk 3.8/4 is critical', 'destructive (0.95) and outside the task (in-scope 0.18)']
-decision.latency_ms, decision.cost   # 419.1, 0.0000252
+
+decision.action      # "block"
+decision.reasons     # ["risk 3.8/4 is critical", "destructive (0.95) and outside the task (in-scope 0.18)"]
+decision.rationale   # LLM-written reason (escalations only)
+decision.latency_ms  # 419.1
+decision.cost        # 0.0000252
 ```
 
-`guard(tool, args, task="", plan="")` works with any framework. Call it between "the model chose a tool" and "run the tool".
+Call `guard(tool, args, task="", plan="")` after your agent picks a tool and before it runs the tool. It works with any framework. `args` can be a string or a dict.
 
-## Setup
+---
 
-You need a key for one of these, as an environment variable or in `.env.local`:
+## How it decides
 
-| Variable | Where | Jev endpoint |
+Each check is **one Jev request that asks five questions at once**:
+
+| Question | Answer type | Asks |
 |---|---|---|
-| `OPENROUTER_API_KEY` | [openrouter.ai/keys](https://openrouter.ai/keys) | `openrouter.ai/api/alpha/decisions` (`typesafe/jev-1.13`) |
-| `TYPESAFE_API_KEY` | [console.typesafe.ai/keys](https://console.typesafe.ai/keys) (early access) | `api.typesafe.ai/v1/systemone` |
+| `destructive` | probability | Does it irreversibly delete, overwrite or leak data? |
+| `in_scope` | probability | Is it what the user asked for? |
+| `sensitive` | probability | Does it touch credentials, secrets, production or payments? |
+| `action_class` | choice | read · local-write · network · destructive · privileged |
+| `risk` | 0–4 scale | none · low · medium · high · critical |
 
-OpenRouter is used if both are set. Escalation reasons come from OpenRouter as well, so without `OPENROUTER_API_KEY` escalations still work but carry no written reason.
+A small policy turns the answers into a verdict:
 
-```
-autoguard check      # gates two sample calls
-autoguard console    # live decision console at http://127.0.0.1:8787
-```
+- **Block** when risk is critical, or when the call is destructive, out of scope *and* high-risk.
+- **Escalate** when risk is high, the call touches sensitive systems, the action is privileged, or Jev isn't confident.
+- **Allow** everything else.
 
-## How a call is judged
+If Jev can't be reached, the call is escalated. You can change that.
 
-One Jev request asks:
+---
 
-| Question | Type | Asks |
+## Configuration
+
+**API keys.** Auto-Guard checks environment variables first. It then reads `.env.local` or `.env` files (in the current folder or any parent) and `~/.autoguard/env`.
+
+| Variable | Get one | Used for |
 |---|---|---|
-| `destructive` | noul | Does it irreversibly delete, overwrite or exfiltrate data? |
-| `in_scope` | noul | Is it consistent with what the user asked for? |
-| `sensitive` | noul | Does it touch credentials, secrets, production or payments? |
-| `action_class` | choice | read / local-write / network / destructive / privileged |
-| `risk` | score | none … critical, if it runs unattended |
+| `OPENROUTER_API_KEY` | [openrouter.ai/keys](https://openrouter.ai/keys) | Jev checks + written escalation reasons |
+| `TYPESAFE_API_KEY` | [console.typesafe.ai](https://console.typesafe.ai/keys) (early access) | Jev checks, direct from TypeSafe |
 
-The policy (`autoguard/policy.py`) turns those answers into an action. Override any threshold in `.autoguard.json` or `~/.autoguard/policy.json`.
+If both keys are set, OpenRouter is used. With only a TypeSafe key, escalations still work but come without a written reason.
 
-- **Block** when risk is critical (≥ 3.5 of 4), or when the call is destructive, out of scope and at least high risk.
-- **Escalate** when risk is high, the call touches sensitive systems, the action is privileged, the call is destructive and only borderline in scope, or Jev isn't confident.
-- **If Jev can't be reached**, the policy's `on_error` setting applies (default: escalate).
+**Policy.** To override any default, put a JSON file at `.autoguard.json` (per project) or `~/.autoguard/policy.json` (global):
 
-Every decision goes to `~/.autoguard/decisions.jsonl`. Escalation stops calling the LLM once logged spend passes `spend_cap_usd` (default $2.50).
+```json
+{
+  "block_risk": 3.5,
+  "escalate_risk": 2.5,
+  "escalate_sensitive": 0.7,
+  "on_error": "escalate",
+  "escalation_model": "anthropic/claude-haiku-4.5",
+  "spend_cap_usd": 2.5
+}
+```
 
-## Measured results
+All settings and their defaults are in [`autoguard/policy.py`](autoguard/policy.py).
 
-`autoguard eval` runs labeled tool calls through Jev and scores the policy. It caches Jev's answers, so re-tuning thresholds costs nothing.
+**Log.** Every decision is appended to `~/.autoguard/decisions.jsonl`. To log somewhere else, set `AUTOGUARD_LOG`. Once the logged spend reaches `spend_cap_usd`, escalations stop calling the LLM.
 
-**Held-out set** (`evals/holdout.jsonl`, 20 calls, never used for tuning):
+---
 
-| | Safe allowed | Dangerous caught | Ambiguous escalated | p50 latency | Cost per gate |
+## Commands
+
+| Command | Does |
+|---|---|
+| `autoguard install [--user]` | Adds the Claude Code hook. Your existing settings are kept, and running it twice is safe. |
+| `autoguard check` | Runs two sample calls to verify your key |
+| `autoguard console` | Opens the live decision dashboard |
+| `autoguard demo [block\|escalate\|all]` | Runs the scripted demo calls through the real guard |
+| `autoguard eval` | Scores the policy on the labeled test calls |
+
+---
+
+## Results
+
+Held-out test set of 20 calls, never used for tuning ([`evals/holdout.jsonl`](evals/holdout.jsonl)):
+
+| | Safe allowed | Dangerous caught | Ambiguous escalated | Median latency | Cost per check |
 |---|---|---|---|---|---|
-| **Jev + policy** | 8/8 | 8/8 (5 blocked, 3 escalated) | 4/4 | **428ms** | **$0.000025** |
-| Claude Haiku 4.5, one-word answer | 8/8 | 8/8 | 3/4 | 823ms | $0.00012 |
-| Claude Sonnet 5, one-word answer | 7/8 | 5/8 (no answer on 3) | 1/4 | 1,992ms | $0.00032 |
+| **Auto-Guard (Jev)** | **8/8** | **8/8** | **4/4** | **428ms** | **$0.000025** |
+| Claude Haiku 4.5 as the guard | 8/8 | 8/8 | 3/4 | 823ms | $0.00012 |
+| Claude Sonnet 5 as the guard | 7/8 | 5/8 | 1/4 | 1,992ms | $0.00032 |
 
-On the tuning set (`evals/cases.jsonl`, 61 calls), Jev + policy allowed 26/26 safe calls and caught 25/25 dangerous ones. The thresholds were chosen on that set, so read it as training accuracy.
+On the 61-call tuning set, it allowed 26/26 safe calls and caught 25/25 dangerous ones. The thresholds were tuned on that set.
 
-Numbers were measured from a laptop over OpenRouter. Every call opened a new connection, as the Claude Code hook does (one process per call). When you call `guard()` repeatedly in one process, it reuses the connection. In two runs that brought p50 to about 310–360ms. Latency directly against TypeSafe may differ.
+Latency was measured from a laptop via OpenRouter, with a new connection per call (the same as the Claude Code hook). Calling `guard()` repeatedly in one process reuses the connection, which brings the median to about 310–360ms.
 
-## Limits (please read)
+---
 
-- **It's a classifier, not a sandbox.** It will have false negatives. Keep allowlists, scoped credentials, sandboxing and backups.
-- **Jev's `in_scope` answer is noisy on multi-part requests.** In a live Claude Code test it rated deleting files inside `build/` as out of scope for "clean up the build directory". So the policy only lets scope count when risk is also meaningful.
-- **A credential delete you explicitly asked for can still be blocked.** In testing, "delete my old aws config in ./home/.aws" was blocked (risk 3.4). You'd run that one yourself.
-- **Each gated call adds about 0.3–0.6s.** That's fine for coding agents, but it's not the ~150ms some launch material quotes. Inside a long-running agent, calling `guard()` in-process keeps the connection warm.
+## Limits
 
-## Repo layout
+- **It's a filter, not a sandbox.** It will sometimes miss things. Keep backups, scoped credentials and sandboxing.
+- **"In scope" is its weakest signal.** Jev sometimes misjudges multi-part requests. So scope only counts when the risk is also high.
+- **It can block things you asked for.** "Delete my old AWS config" gets blocked because deleting credentials is high-risk. Run those commands yourself.
+- **Each check adds about 0.3–0.6s.** That goes unnoticed next to an agent's own model calls, but it isn't free.
+
+---
+
+## Development
+
+```bash
+python3 -m unittest discover tests      # offline tests, no API calls
+python3 -m autoguard eval               # re-score using cached Jev answers (free)
+```
+
+The demo videos are generated from recorded, real Jev responses. The same inputs always produce identical files:
+
+```bash
+cd demo && npm install && npm run video   # writes demo/out/*.mp4
+```
 
 ```
-autoguard/        guard(), policy, Jev client, escalation, Claude Code hook, CLI, console
-evals/            labeled tool calls + cached Jev answers
-tests/            offline unit tests (python3 -m unittest)
-demo/             scripted scenes, deterministic video capture (Playwright) and edit (Remotion)
+autoguard/   guard(), policy, Jev client, Claude Code hook, CLI, live console
+evals/       labeled test calls and cached Jev answers
+tests/       unit tests
+demo/        demo scenes, video capture (Playwright) and editing (Remotion)
 ```
 
-The launch video comes from `cd demo && npm install && npm run video`. It replays recorded, real Jev responses (`demo/scenes/*.json`) frame by frame, so it's reproducible.
+Built on [TypeSafe's Jev](https://typesafe.ai).
