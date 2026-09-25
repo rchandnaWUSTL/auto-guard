@@ -30,7 +30,7 @@ Turn it on in your project for your agent:
 
 ```bash
 autoguard install                   # Claude Code
-autoguard install --agent cursor    # or codex, gemini, copilot, windsurf
+autoguard install --agent cursor    # or codex, gemini, copilot, windsurf, opencode
 ```
 
 Add `--user` to turn it on for every project. To confirm your key works:
@@ -53,14 +53,17 @@ To watch decisions as they happen, run `autoguard console` and open http://127.0
 | OpenAI Codex CLI | `--agent codex` | shell commands, patches, MCP tools | blocks |
 | Gemini CLI | `--agent gemini` | shell commands, file writes, MCP tools | blocks |
 | Windsurf | `--agent windsurf` | shell commands, file writes, MCP tools | blocks |
+| opencode | `--agent opencode` | shell commands, file edits, web fetches, subagents, MCP tools | blocks |
 
-Codex, Gemini CLI and Windsurf hooks can only allow or block, so an unsure call gets blocked with the reason shown. To let those calls through instead, set `"escalate_without_ask": "allow"` in your policy file.
+Codex, Gemini CLI, Windsurf and opencode can only allow or block, so an unsure call gets blocked with the reason shown. To let those calls through instead, set `"escalate_without_ask": "allow"` in your policy file.
 
 Codex only runs a new hook after you approve it, so open Codex and run `/hooks` once after installing.
 
-Claude Code has been tested end to end in real sessions. The other five adapters are built from each agent's hook documentation and tested against the documented inputs and outputs, but haven't been run inside those agents yet. If one misbehaves, please [open an issue](https://github.com/rchandnaWUSTL/auto-guard/issues).
+opencode has no command hooks, so there `autoguard install` writes a small plugin to `.opencode/plugins/autoguard.js` (or `~/.config/opencode/plugins/` with `--user`) that calls Auto-Guard before each tool call. Restart opencode after installing. If the plugin can't run Auto-Guard, for example because the Python environment it was installed from is gone, it blocks the call and tells you to reinstall. opencode has a report of plugin hooks not firing under headless `opencode run` ([#41422](https://github.com/anomalyco/opencode/issues/41422), open) and had the same problem in the desktop app ([#38604](https://github.com/anomalyco/opencode/issues/38604), closed), so check that `autoguard console` shows decisions before relying on it there.
 
-Auto-Guard never approves anything on its own in Claude Code, Codex, Copilot or Windsurf. When it allows a call, the agent's normal permission rules still apply. Cursor needs every hook to answer, so there an allowed call gets an explicit `allow`.
+Claude Code has been tested end to end in real sessions. The other six adapters are built from each agent's hook documentation and tested against the documented inputs and outputs, but haven't been run inside those agents yet. If one misbehaves, please [open an issue](https://github.com/rchandnaWUSTL/auto-guard/issues).
+
+Auto-Guard never approves anything on its own in Claude Code, Codex, Copilot, Windsurf or opencode. When it allows a call, the agent's normal permission rules still apply. Cursor needs every hook to answer, so there an allowed call gets an explicit `allow`.
 
 ## Use it in your own agent
 

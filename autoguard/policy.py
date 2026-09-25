@@ -26,7 +26,7 @@ DEFAULTS = {
     "escalate_unresolved_destructive": 0.5,
     # Always escalate these action classes (Jev's action_class answer).
     "escalate_classes": ["privileged"],
-    # For agents whose hooks can't ask you (Codex, Gemini CLI, Windsurf): "block" or "allow" escalations.
+    # For agents whose hooks can't ask you (Codex, Gemini CLI, Windsurf, opencode): "block" or "allow" escalations.
     "escalate_without_ask": "block",
     # What to do if Jev can't be reached: "escalate", "block" or "allow".
     "on_error": "escalate",

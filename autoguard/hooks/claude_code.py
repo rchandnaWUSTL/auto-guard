@@ -48,7 +48,7 @@ def describe(tool_name, tool_input):
         return tool_input.get("command", "")
     if isinstance(tool_input, dict):
         keep = {k: v for k, v in tool_input.items() if k not in ("description", "timeout", "run_in_background")}
-        for k in ("content", "new_string", "old_string"):
+        for k in ("content", "new_string", "old_string", "newString", "oldString", "patchText"):  # last three: opencode
             if isinstance(keep.get(k), str) and len(keep[k]) > 1500:
                 keep[k] = keep[k][:1500] + "…"
         return json.dumps(keep, ensure_ascii=False)

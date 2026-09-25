@@ -9,3 +9,4 @@ build/
 demo/node_modules/
 demo/raw/
 dist/
+.DS_Store

@@ -7,8 +7,12 @@ Formats follow each agent's hook docs (checked 2026-09):
   gemini   https://geminicli.com/docs/hooks/reference/
   copilot  https://docs.github.com/en/copilot/reference/hooks-configuration
   windsurf https://docs.windsurf.com/windsurf/cascade/hooks
+  opencode https://opencode.ai/docs/plugins/
 
-Agents that can't ask the user (codex, gemini, windsurf, and cursor's preToolUse) get
+opencode has no command hooks, only JS plugins. `autoguard install` writes opencode_plugin.js,
+which pipes each tool call here as {"tool", "args", "cwd", "session_id", "task"}.
+
+Agents that can't ask the user (codex, gemini, windsurf, opencode, and cursor's preToolUse) get
 escalations as blocks by default, with the reason shown. Set "escalate_without_ask" to
 "allow" in the policy to let them through instead.
 """
@@ -20,7 +24,7 @@ from ..guard import ALLOW, BLOCK, ESCALATE, guard
 from .. import policy as _policy
 from .claude_code import describe, last_user_message
 
-AGENTS = ("claude", "cursor", "codex", "gemini", "copilot", "windsurf")
+AGENTS = ("claude", "cursor", "codex", "gemini", "copilot", "windsurf", "opencode")
 
 
 def _reason(decision):
@@ -85,6 +89,13 @@ def parse(agent, event):
         if action == "pre_run_command":
             return "Bash", info.get("command_line", ""), task
         return action, describe(action, info), task
+    if agent == "opencode":
+        tool = event.get("tool", "")
+        args = _as_dict(event.get("args"))
+        task = event.get("task") or ""  # no transcript file; the plugin passes the last user message
+        if tool in ("bash", "shell"):  # opencode 2.0 renames bash to shell
+            return "Bash", args.get("command", ""), task
+        return tool, describe(tool, args), task
     tool = event.get("tool_name", "")
     return tool, describe(tool, event.get("tool_input")), task
 
@@ -96,6 +107,8 @@ def event_cwd(agent, event):
     if agent == "cursor" and not event.get("cwd"):
         roots = event.get("workspace_roots") or []
         return roots[0] if roots else None
+    if agent == "opencode":
+        return _as_dict(event.get("args")).get("workdir") or event.get("cwd")
     return event.get("cwd")
 
 
@@ -128,10 +141,11 @@ def render(agent, event, decision):
             return None, 0, ""
         verdict = "deny" if decision.action == BLOCK else "ask"
         return {"permissionDecision": verdict, "permissionDecisionReason": reason}, 0, ""
-    if agent == "windsurf":
+    if agent in ("windsurf", "opencode"):
         if _without_ask(decision.action) == ALLOW:
             return None, 0, ""
-        return None, 2, reason  # Windsurf blocks on exit 2 and shows stderr
+        # Windsurf blocks on exit 2 and shows stderr; our opencode plugin throws stderr on exit 2.
+        return None, 2, reason
     raise ValueError("unknown agent %r" % agent)
 
 

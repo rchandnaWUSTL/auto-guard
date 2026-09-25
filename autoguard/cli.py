@@ -68,7 +68,24 @@ def _config(agent, user):
     return path, events, gated
 
 
+def _install_opencode(user):
+    """opencode has no command hooks, so write a small plugin that calls our hook before each tool call."""
+    base = Path.home() / ".config" / "opencode" if user else Path.cwd() / ".opencode"
+    path = base / "plugins" / "autoguard.js"
+    if path.is_file() and "autoguard hook" not in path.read_text():
+        raise SystemExit("%s exists and isn't Auto-Guard's; move it and run install again." % path)
+    template = (Path(__file__).parent / "hooks" / "opencode_plugin.js").read_text()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(template.replace("__AUTOGUARD_PYTHON__", json.dumps(sys.executable)))
+    print("Auto-Guard installed for opencode in %s" % path)
+    print("Gating: shell commands, file edits, web fetches, subagents and MCP tools")
+    print("Restart opencode to load the plugin. If Auto-Guard can't run, the plugin blocks the call.")
+    print("Watch decisions live: autoguard console")
+
+
 def cmd_install(args):
+    if args.agent == "opencode":
+        return _install_opencode(args.user)
     path, events, gated = _config(args.agent, args.user)
     settings = json.loads(path.read_text()) if path.is_file() else {}
     if args.agent in ("cursor", "copilot"):

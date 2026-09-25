@@ -3,6 +3,8 @@
 import io
 import json
 import os
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -23,6 +25,8 @@ EVENTS = {
     "gemini": {"hook_event_name": "BeforeTool", "tool_name": "run_shell_command", "tool_input": {"command": "rm -rf ~/.aws"}},
     "copilot": {"toolName": "bash", "toolArgs": json.dumps({"command": "rm -rf ~/.aws"})},
     "windsurf": {"agent_action_name": "pre_run_command", "tool_info": {"command_line": "rm -rf ~/.aws", "cwd": "/p"}},
+    # opencode has no hook payload of its own; this is what our plugin sends.
+    "opencode": {"tool": "bash", "args": {"command": "rm -rf ~/.aws"}, "cwd": "/p", "session_id": "s", "task": "clean up"},
 }
 
 
@@ -54,6 +58,17 @@ class ParseTest(unittest.TestCase):
         finally:
             os.unlink(f.name)
 
+    def test_opencode_task_cwd_and_edits(self):
+        self.assertEqual(agents.parse("opencode", EVENTS["opencode"])[2], "clean up")
+        self.assertEqual(agents.event_cwd("opencode", EVENTS["opencode"]), "/p")
+        event = {"tool": "shell", "args": {"command": "ls", "workdir": "/w"}, "cwd": "/p"}
+        self.assertEqual(agents.parse("opencode", event)[:2], ("Bash", "ls"))
+        self.assertEqual(agents.event_cwd("opencode", event), "/w")
+        tool, args, _ = agents.parse("opencode", {"tool": "edit", "args": {"filePath": "a.py", "newString": "x" * 5000}})
+        self.assertEqual(tool, "edit")
+        self.assertIn("a.py", args)
+        self.assertLess(len(args), 2000)
+
 
 class RenderTest(unittest.TestCase):
     def test_block(self):
@@ -69,6 +84,9 @@ class RenderTest(unittest.TestCase):
         out, code, err, _ = run("windsurf", EVENTS["windsurf"], "block")
         self.assertEqual((out, code), (None, 2))
         self.assertIn("Auto-Guard BLOCK", err)
+        out, code, err, _ = run("opencode", EVENTS["opencode"], "block")
+        self.assertEqual((out, code), (None, 2))
+        self.assertTrue(err.startswith("Auto-Guard BLOCK"))  # the plugin looks for this prefix
 
     def test_escalate_asks_where_supported_and_blocks_elsewhere(self):
         self.assertEqual(run("cursor", EVENTS["cursor"], "escalate")[0]["permission"], "ask")
@@ -76,12 +94,14 @@ class RenderTest(unittest.TestCase):
         self.assertEqual(run("codex", EVENTS["codex"], "escalate")[0]["hookSpecificOutput"]["permissionDecision"], "deny")
         self.assertEqual(run("gemini", EVENTS["gemini"], "escalate")[0]["decision"], "deny")
         self.assertEqual(run("windsurf", EVENTS["windsurf"], "escalate")[1], 2)
+        self.assertEqual(run("opencode", EVENTS["opencode"], "escalate")[1], 2)
         cursor_tool = {"hook_event_name": "preToolUse", "tool_name": "Write", "tool_input": {"file_path": "a"}}
         self.assertEqual(run("cursor", cursor_tool, "escalate")[0]["permission"], "deny")
 
     def test_escalate_without_ask_can_be_allowed_by_policy(self):
         with mock.patch.object(agents._policy, "load", return_value={"escalate_without_ask": "allow"}):
             self.assertIsNone(run("codex", EVENTS["codex"], "escalate")[0])
+            self.assertEqual(run("opencode", EVENTS["opencode"], "escalate")[1], 0)
 
     def test_allow(self):
         self.assertEqual(run("cursor", EVENTS["cursor"], "allow")[0], {"permission": "allow"})
@@ -89,6 +109,7 @@ class RenderTest(unittest.TestCase):
         self.assertEqual(run("gemini", EVENTS["gemini"], "allow")[0], {})
         self.assertIsNone(run("copilot", EVENTS["copilot"], "allow")[0])
         self.assertEqual(run("windsurf", EVENTS["windsurf"], "allow")[1], 0)
+        self.assertEqual(run("opencode", EVENTS["opencode"], "allow")[1:3], (0, ""))
 
 
 class InstallTest(unittest.TestCase):
@@ -128,6 +149,85 @@ class InstallTest(unittest.TestCase):
         data = json.loads((Path(d) / ".gemini/settings.json").read_text())
         self.assertEqual(data["theme"], "dark")
         self.assertEqual(data["hooks"]["BeforeTool"][0], {"matcher": "x", "hooks": [{"command": "mine"}]})
+
+    def test_opencode_gets_a_plugin_file(self):
+        text = (Path(self.install("opencode")) / ".opencode/plugins/autoguard.js").read_text()
+        self.assertIn("const PYTHON = %s\n" % json.dumps(sys.executable), text)
+        self.assertNotIn("__AUTOGUARD_PYTHON__", text)
+
+    def test_opencode_keeps_someone_elses_plugin(self):
+        d = tempfile.mkdtemp()
+        theirs = Path(d) / ".opencode/plugins/autoguard.js"
+        theirs.parent.mkdir(parents=True)
+        theirs.write_text("export const Mine = async () => ({})\n")
+        cwd = os.getcwd()
+        os.chdir(d)
+        try:
+            with self.assertRaises(SystemExit):
+                cli.main(["install", "--agent", "opencode"])
+        finally:
+            os.chdir(cwd)
+        self.assertIn("Mine", theirs.read_text())
+
+
+DRIVER = """
+import { AutoGuard } from %s
+const hooks = await AutoGuard({ directory: %s })
+await hooks["chat.message"]({ sessionID: "s" }, { parts: [{ type: "text", text: "clean up" }] })
+const out = {}
+for (const tool of ["bash", "read"]) {
+  try {
+    await hooks["tool.execute.before"]({ tool, sessionID: "s", callID: "c" }, { args: { command: "rm -rf x" } })
+    out[tool] = null
+  } catch (e) {
+    out[tool] = e.message
+  }
+}
+console.log(JSON.stringify(out))
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "needs node to run the opencode plugin")
+class OpencodePluginTest(unittest.TestCase):
+    """Runs the installed plugin under node with a stub in place of python."""
+
+    def drive(self, stub_body=None):
+        d = Path(tempfile.mkdtemp())
+        python = d / "python-stub"
+        if stub_body is not None:
+            python.write_text("#!/bin/sh\ncat > \"$0.in\"\n" + stub_body)
+            python.chmod(0o755)
+        cwd = os.getcwd()
+        os.chdir(d)
+        try:
+            with mock.patch("sys.stdout", io.StringIO()), mock.patch.object(sys, "executable", str(python)):
+                cli.main(["install", "--agent", "opencode"])
+        finally:
+            os.chdir(cwd)
+        plugin = d / "autoguard.mjs"  # .mjs so any node version loads it as a module
+        plugin.write_text((d / ".opencode/plugins/autoguard.js").read_text())
+        script = DRIVER % (json.dumps(plugin.as_uri()), json.dumps(str(d)))
+        res = subprocess.run(["node", "--input-type=module", "-e", script], capture_output=True, text=True, timeout=60)
+        self.assertEqual(res.returncode, 0, res.stderr)
+        sent = Path(str(python) + ".in")
+        return json.loads(res.stdout), json.loads(sent.read_text()) if sent.is_file() else None
+
+    def test_allow_passes_and_sends_the_call(self):
+        out, sent = self.drive("exit 0\n")
+        self.assertEqual(out, {"bash": None, "read": None})
+        self.assertEqual((sent["tool"], sent["args"], sent["task"]), ("bash", {"command": "rm -rf x"}, "clean up"))
+        self.assertEqual(agents.parse("opencode", sent)[:2], ("Bash", "rm -rf x"))
+
+    def test_block_throws_the_reason_and_reads_are_skipped(self):
+        out, _ = self.drive("echo 'Auto-Guard BLOCK: why' >&2\nexit 2\n")
+        self.assertEqual(out, {"bash": "Auto-Guard BLOCK: why", "read": None})
+
+    def test_broken_guard_blocks(self):
+        for stub in (None, "exit 1\n", "echo 'usage: autoguard' >&2\nexit 2\n"):
+            out, _ = self.drive(stub)
+            self.assertIn("Auto-Guard could not run", out["bash"], stub)
+            self.assertIn("autoguard install --agent opencode", out["bash"], stub)
+            self.assertIsNone(out["read"])
 
 
 if __name__ == "__main__":
