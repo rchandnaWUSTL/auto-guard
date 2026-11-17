@@ -9,7 +9,11 @@ is read from the host, so it works even when a command wipes the container's own
 Commands only ever run inside those containers. This script is meant for CI and refuses to
 start elsewhere unless given --allow-local.
 
-    python3 evals/indirection/ground_truth.py [--allow-local] [--only ID,ID]
+    python3 evals/indirection/ground_truth.py [--cases FILE] [--quiet] [--allow-local] [--only ID,ID]
+
+--cases picks another case file (results go next to it as <name>_ground_truth.jsonl).
+--quiet prints case ids only, not commands. Used for round 2, so the author can check
+labels without reading the blind cases before scoring.
 """
 
 import json
@@ -71,6 +75,13 @@ def inside(path, cwd):
     return path == cwd or path.startswith(cwd.rstrip("/") + "/")
 
 
+def expected(case):
+    """Round 1 cases carry a label; round 2 cases carry the writer's intended group."""
+    if "label" in case:
+        return case["label"]
+    return {"must-allow": "safe", "must-block": "dangerous", "should-ask": "dangerous"}.get(case.get("group"), "unknown")
+
+
 def run_case(case):
     image = "autoguard-gt-" + case["fixture"].replace("_", "-")
     env = dict(case["env"], **case["shell_env"])
@@ -95,7 +106,7 @@ def run_case(case):
     inside_ = sorted("%s %s" % (k, p) for k, p in touched if inside(p, case["cwd"]))
     return {
         "id": case["id"],
-        "label": case["label"],
+        "label": expected(case),
         "label_from_run": "dangerous" if outside else "safe",
         "exit_code": exit_code,
         "seconds": round(elapsed, 2),
@@ -112,7 +123,15 @@ def main():
     if os.environ.get("GITHUB_ACTIONS") != "true" and "--allow-local" not in args:
         sys.exit("ground_truth.py runs real rm -rf commands (inside containers). Run it in CI, "
                  "or pass --allow-local if you're sure Docker is isolating them.")
-    cases = [json.loads(l) for l in CASES.read_text().splitlines() if l.strip()]
+    cases_path = Path(args[args.index("--cases") + 1]).resolve() if "--cases" in args else CASES
+    quiet = "--quiet" in args
+    if cases_path == CASES:
+        out_path, meta_path = OUT, META
+    else:
+        stem = cases_path.name.replace("_cases.jsonl", "").replace(".jsonl", "")
+        out_path = cases_path.parent / (stem + "_ground_truth.jsonl")
+        meta_path = cases_path.parent / (stem + "_ground_truth_meta.json")
+    cases = [json.loads(l) for l in cases_path.read_text().splitlines() if l.strip()]
     if "--only" in args:
         wanted = set(args[args.index("--only") + 1].split(","))
         cases = [c for c in cases if c["id"] in wanted]
@@ -123,8 +142,9 @@ def main():
         rows.append(row)
         flag = "" if row["label"] == row["label_from_run"] else "   <-- MISMATCH"
         print("%-8s %-9s run=%-9s exit=%-3d outside=%-3d %s%s" % (
-            c["id"], c["label"], row["label_from_run"], row["exit_code"], row["outside_count"], c["command"], flag))
-    OUT.write_text("".join(json.dumps(r) + "\n" for r in rows))
+            c["id"], c["label"], row["label_from_run"], row["exit_code"], row["outside_count"],
+            "" if quiet else c["command"], flag))
+    out_path.write_text("".join(json.dumps(r) + "\n" for r in rows))
     meta = {
         "base_image": "debian:stable-slim",
         "base_image_id": sh(["docker", "image", "inspect", "-f", "{{.Id}}", BASE_IMAGE]).strip(),
@@ -132,9 +152,9 @@ def main():
         "rm": sh(["docker", "run", "--rm", BASE_IMAGE, "rm", "--version"]).splitlines()[0],
         "commit": os.environ.get("GITHUB_SHA") or sh(["git", "rev-parse", "HEAD"], cwd=REPO).strip(),
         "cases": len(rows),
-        "mismatches": [r["id"] for r in rows if r["label"] != r["label_from_run"]],
+        "mismatches": [r["id"] for r in rows if r["label"] not in (r["label_from_run"], "unknown")],
     }
-    META.write_text(json.dumps(meta, indent=2) + "\n")
+    meta_path.write_text(json.dumps(meta, indent=2) + "\n")
     summary = "%d cases, %d match the hand label, %d mismatches: %s" % (
         len(rows), len(rows) - len(meta["mismatches"]), len(meta["mismatches"]), ", ".join(meta["mismatches"]) or "none")
     print("\n" + summary)

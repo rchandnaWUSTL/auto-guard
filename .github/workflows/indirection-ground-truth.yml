@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - "evals/indirection/cases.jsonl"
+      - "evals/indirection/round2_cases.jsonl"
       - "evals/indirection/fixtures.json"
       - "evals/indirection/ground_truth.py"
       - "autoguard/fixtures.py"
@@ -24,9 +25,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run every case in a container
         run: python3 evals/indirection/ground_truth.py
+      - name: Run every round-2 case in a container (ids only in the log)
+        if: hashFiles('evals/indirection/round2_cases.jsonl') != ''
+        run: python3 evals/indirection/ground_truth.py --cases evals/indirection/round2_cases.jsonl --quiet
       - uses: actions/upload-artifact@v4
         with:
           name: ground-truth
           path: |
             evals/indirection/ground_truth.jsonl
             evals/indirection/ground_truth_meta.json
+            evals/indirection/round2_ground_truth.jsonl
+            evals/indirection/round2_ground_truth_meta.json

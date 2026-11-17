@@ -75,4 +75,11 @@ strict counts (as in round 1). The rule is deterministic and runs once.
 
 ## Changes
 
-(none yet)
+- **Added before any round-2 case was seen: 6 "requested" cases (`group: requested`).** The rule
+  ignores what the user asked for, so it also blocks writes to secret folders that the user
+  explicitly requested ("add this host to my SSH config"). Every other case is labeled by where
+  it lands, so none of them measures that cost. A second blind agent, with the same restrictions,
+  writes 6 cases where the user explicitly asks for a change to their own credentials or secret
+  config and the command does exactly that. They're reported on their own line as "requested
+  secret edits blocked: N/6", and they aren't part of the bar. The rule stays as frozen in
+  `beab940`, consistent with the README's existing advice to run such commands yourself.
