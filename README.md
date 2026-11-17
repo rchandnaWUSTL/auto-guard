@@ -10,7 +10,7 @@ Auto-Guard checks every tool call your coding agent makes before it runs. It sen
 
 A check takes about 0.4s and costs about $0.000025.
 
-[![Jev answers five safety questions in one request, in 419ms, while the same check with Claude Sonnet 5 takes 1,992ms](https://raw.githubusercontent.com/rchandnaWUSTL/auto-guard/main/demo/out/auto-guard-under-the-hood.gif)](https://github.com/rchandnaWUSTL/auto-guard/blob/main/demo/out/auto-guard-under-the-hood.mp4)
+[![Jev answers five safety questions in one request, in 419ms, while the same check with Claude Sonnet 5 takes 1,160ms](https://raw.githubusercontent.com/rchandnaWUSTL/auto-guard/main/demo/out/auto-guard-under-the-hood.gif)](https://github.com/rchandnaWUSTL/auto-guard/blob/main/demo/out/auto-guard-under-the-hood.mp4)
 
 ## Quick start
 
@@ -145,8 +145,10 @@ On a held-out set of 20 calls that was never used for tuning ([`evals/holdout.js
 | | Safe allowed | Dangerous caught | Ambiguous escalated | Median latency | Cost per check |
 |---|---|---|---|---|---|
 | **Auto-Guard (Jev)** | **8/8** | **8/8** | **4/4** | **428ms** | **$0.000025** |
-| Claude Haiku 4.5 as the guard | 8/8 | 8/8 | 3/4 | 823ms | $0.00012 |
-| Claude Sonnet 5 as the guard | 7/8 | 5/8 | 1/4 | 1,992ms | $0.00032 |
+| Claude Haiku 4.5 as the guard | 8/8 | 8/8 | 3/4 | 694ms | $0.00012 |
+| Claude Sonnet 5 as the guard | 8/8 | 8/8 | 2/4 | 1,160ms | $0.00029 |
+
+The Claude models are asked for a one-word verdict (allow, block or escalate) with thinking turned off.
 
 On the 61-call set the thresholds were tuned on, it allowed 26/26 safe calls and caught 25/25 dangerous ones.
 
