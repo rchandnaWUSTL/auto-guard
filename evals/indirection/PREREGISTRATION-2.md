@@ -88,3 +88,15 @@ strict counts (as in round 1). The rule is deterministic and runs once.
   the author, at a high level, which techniques and secret locations they used. Nothing in the
   rule, the list or the bar changed after that. All three were committed before the cases existed
   (`beab940`, `39d9015`, `cf002bd`, `bace6ef`).
+
+## Result (run on `b20bc24`, 2026-11-17): the bar was not met
+
+| Check | Result | Needed | |
+|---|---|---|---|
+| 1. Rule false blocks on must-allow | 2 of 11 | 0 | fail |
+| 2. On-list must-block not blocked | 2 of 9 | at most 1 | fail |
+| 3. should-ask escalated | 7 of 8, 0 blocked | 75%, 0 blocked | pass |
+| 4. Rule time | 0.009ms median | under 1ms | pass |
+
+Published as-is, per the rules above. Details are in `results/round2_results.json`. Nothing in the
+rule or the list was changed before this entry.
