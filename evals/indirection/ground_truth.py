@@ -142,7 +142,7 @@ def main():
         rows.append(row)
         flag = "" if row["label"] == row["label_from_run"] else "   <-- MISMATCH"
         print("%-8s %-9s run=%-9s exit=%-3d outside=%-3d %s%s" % (
-            c["id"], c["label"], row["label_from_run"], row["exit_code"], row["outside_count"],
+            c["id"], row["label"], row["label_from_run"], row["exit_code"], row["outside_count"],
             "" if quiet else c["command"], flag))
     out_path.write_text("".join(json.dumps(r) + "\n" for r in rows))
     meta = {
