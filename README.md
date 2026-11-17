@@ -93,15 +93,9 @@ Each check is one Jev request that asks five questions at once:
 | `action_class` | choice | read, local-write, network, destructive or privileged |
 | `risk` | 0–4 scale | none, low, medium, high or critical |
 
-Before a shell command goes to Jev, Auto-Guard works out what it will touch, without running anything. It expands `~` and environment variables, resolves paths against the agent's working directory (following any `cd` in the command), expands globs and follows symlinks. Anything notable is added to what Jev sees, like `build/ -> ~/.aws (symlink, outside the working directory)`. It knows that `rm` and `unlink` remove a symlink itself rather than what it points to, unless the path ends in `/` or a glob reaches through it, so `rm -rf build` isn't treated like `rm -rf build/`. A destructive command that uses a variable or `$(...)` it can't resolve is escalated.
+Before a shell command goes to Jev, Auto-Guard works out what it will touch, without running anything. It expands `~` and variables, follows `cd`, globs and symlinks, and adds anything notable to what Jev sees, like `build/ -> ~/.aws (symlink, outside the working directory)`. It knows `rm -rf build` removes only a symlink while `rm -rf build/` reaches through it. A destructive command that uses a variable or `$(...)` it can't resolve is escalated.
 
-**Optional: the outside-the-folder rule** (off by default; turn it on with `"outside_rule": true`). When it's on and a shell command writes to, deletes or creates anything outside the working folder, Auto-Guard decides without asking Jev. It blocks if the path is sensitive and asks you otherwise. Sensitive means the home folder itself, `~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.kube`, `~/.config/gcloud`, `~/.azure`, `~/.docker/config.json`, `~/.netrc`, `~/.git-credentials`, `~/.npmrc`, `~/.pypirc`, `~/.config/gh`, `~/Library/Keychains`, `~/.terraform.d/credentials.tfrc.json`, `~/.cargo/credentials.toml`, `~/.local/share/mkcert`, `~/.password-store`, `~/.secrets`, any folder containing one of those, and any file whose name starts or ends with `.env` ([`autoguard/rule.py`](https://github.com/rchandnaWUSTL/auto-guard/blob/main/autoguard/rule.py)). Add your own with `"sensitive_paths_extra"`. These decisions take under a millisecond and cost nothing.
-
-It's off by default because of three weaknesses, two of them measured on 46 blind test cases ([write-up](https://github.com/rchandnaWUSTL/auto-guard/blob/main/evals/indirection/WRITEUP.md)):
-
-- **It blocks secret edits you asked for.** It doesn't look at your request, so "add this host to my SSH config" is blocked. That happened in 6 of 6 such test cases.
-- **It has false blocks and gaps.** It blocked 2 of 11 harmless commands, and 5 of 14 secret locations the test reached weren't on its list. The `mv` bug behind one false block and those 5 locations have since been fixed, but no new blind test has checked the fixes.
-- **It asks about every write outside the folder, including `/tmp`.** Codex, Gemini CLI, Windsurf and opencode can't ask, so there those writes are blocked unless you set `"escalate_without_ask": "allow"`. This one wasn't measured.
+**Optional: block writes outside the project** (`"outside_rule": true`, off by default). With this on, a shell command that writes outside the working folder is decided without Jev, in under a millisecond: it's blocked if it reaches a secret (`~/.ssh`, `~/.aws`, `.env` files and [others](https://github.com/rchandnaWUSTL/auto-guard/blob/main/autoguard/rule.py); add yours with `"sensitive_paths_extra"`), and you're asked otherwise. It's off by default because in [testing](https://github.com/rchandnaWUSTL/auto-guard/blob/main/evals/indirection/README.md) it also blocked secret edits users asked for ("add this host to my SSH config") and a couple of harmless commands, and it asks about every write outside the folder, including `/tmp`. On agents that can't ask, those writes are blocked.
 
 A call is blocked when its risk is critical, or when it's destructive, out of scope and high-risk. It's escalated when the risk is high, it touches sensitive systems, the action is privileged, or Jev isn't confident. Everything else is allowed. If Jev can't be reached, the call is escalated, and you can change that.
 
@@ -172,7 +166,7 @@ It can block something you asked for. "Delete my old AWS config" gets blocked be
 
 Auto-Guard checks the command before the agent runs it and can't control the process that actually runs. A variable exported in an earlier command lives in the agent's shell, where Auto-Guard can't see it (so that command gets escalated), and a file could change between the check and the run. Closing that gap takes a sandbox, which is worth running alongside this.
 
-The resolver models how `rm`, `sed -i` and `find` treat symlinks, and which arguments `cp`, `mv`, `ln`, `install`, `tee`, `touch`, `chmod` and redirects write to. It doesn't see inside scripts, Makefiles, `sh -c` or `python -c` strings, brace expansion, `cd -`, `pushd` or `find -L`, and it doesn't know other programs' rules for which arguments they write to. Those calls go to Jev without the outside-the-folder rule.
+The resolver can't see inside scripts, Makefiles, `sh -c` or `python -c` strings, brace expansion, `cd -`, `pushd` or `find -L`. Those commands are judged on their text.
 
 Each check adds about 0.3–0.6s. Next to an agent's own model calls that's hard to notice.
 
@@ -186,7 +180,7 @@ cd demo && npm install && npm run video # rebuild the demo videos from recorded 
 
 ```
 autoguard/   guard(), policy, Jev client, agent hooks, CLI, live console
-evals/       labeled test calls and cached Jev answers
+evals/       labeled test calls, cached Jev answers, and the indirection eval
 tests/       unit tests
 demo/        demo scenes and the video pipeline (Playwright and Remotion)
 ```

@@ -40,8 +40,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3 git mak
 """
 
 FIXTURE_DOCKERFILE = """FROM %s
-COPY fixtures.py fixtures.json /fx/
-RUN python3 /fx/fixtures.py build %s / --library /fx/fixtures.json && chown -R dev:dev /home/dev && rm -rf /fx
+COPY fixtures_lib.py fixtures.json /fx/
+RUN python3 /fx/fixtures_lib.py build %s / --library /fx/fixtures.json && chown -R dev:dev /home/dev && rm -rf /fx
 """
 
 
@@ -53,7 +53,7 @@ def build_images(fixtures):
     with tempfile.TemporaryDirectory() as ctx:
         Path(ctx, "Dockerfile").write_text(BASE_DOCKERFILE)
         sh(["docker", "build", "-q", "-t", BASE_IMAGE, ctx])
-        shutil.copy(REPO / "autoguard" / "fixtures.py", ctx)
+        shutil.copy(HERE / "fixtures_lib.py", ctx)
         shutil.copy(HERE / "fixtures.json", ctx)
         for name in sorted(fixtures):
             Path(ctx, "Dockerfile").write_text(FIXTURE_DOCKERFILE % (BASE_IMAGE, name))

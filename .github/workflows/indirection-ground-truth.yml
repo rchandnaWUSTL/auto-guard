@@ -10,7 +10,7 @@ on:
       - "evals/indirection/round2_cases.jsonl"
       - "evals/indirection/fixtures.json"
       - "evals/indirection/ground_truth.py"
-      - "autoguard/fixtures.py"
+      - "evals/indirection/fixtures_lib.py"
       - ".github/workflows/indirection-ground-truth.yml"
   workflow_dispatch:
 

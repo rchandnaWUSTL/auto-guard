@@ -1,4 +1,4 @@
-"""Score round 2 (PREREGISTRATION-2.md): shipped Auto-Guard (resolver + outside-the-folder rule + Jev).
+"""Score round 2: shipped Auto-Guard (resolver + outside-the-folder rule + Jev).
 
 For every case: resolve on the built fixture (confined), apply the rule, and ask Jev in resolved
 mode (used when the rule doesn't decide, and reported as "Jev, no rule") and in raw mode
@@ -29,7 +29,8 @@ sys.path.insert(0, str(REPO))
 
 from autoguard import jev  # noqa: E402
 from autoguard.evals import pct  # noqa: E402
-from autoguard.fixtures import build, load_library  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from fixtures_lib import build, load_library  # noqa: E402
 from autoguard.policy import DEFAULTS  # noqa: E402
 from autoguard.resolve import resolve  # noqa: E402
 from autoguard.rule import sensitive, timed_check  # noqa: E402

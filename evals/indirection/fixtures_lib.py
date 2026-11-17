@@ -22,7 +22,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-DEFAULT_LIBRARY = Path(__file__).resolve().parent.parent / "evals" / "indirection" / "fixtures.json"
+DEFAULT_LIBRARY = Path(__file__).resolve().parent / "fixtures.json"
 
 
 class FixtureError(ValueError):
@@ -151,7 +151,7 @@ def build(spec, root, library=None):
 
 
 if __name__ == "__main__":
-    # python3 fixtures.py build NAME ROOT [--library PATH]   (used inside the ground-truth containers)
+    # python3 fixtures_lib.py build NAME ROOT [--library PATH]   (used inside the ground-truth containers)
     args = sys.argv[1:]
     lib = None
     if "--library" in args:
@@ -159,5 +159,5 @@ if __name__ == "__main__":
         lib = load_library(args[i + 1])
         del args[i:i + 2]
     if len(args) != 3 or args[0] != "build":
-        sys.exit("usage: fixtures.py build NAME ROOT [--library PATH]")
+        sys.exit("usage: fixtures_lib.py build NAME ROOT [--library PATH]")
     print(" ".join(build(args[1], args[2], lib)))

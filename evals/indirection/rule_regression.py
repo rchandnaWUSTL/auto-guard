@@ -13,7 +13,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from autoguard.fixtures import build, load_library  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from fixtures_lib import build, load_library  # noqa: E402
 from autoguard.resolve import resolve  # noqa: E402
 from autoguard.rule import check, sensitive  # noqa: E402
 

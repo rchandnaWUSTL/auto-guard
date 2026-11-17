@@ -11,7 +11,7 @@ AUTOGUARD_RESOLVE=0, so the "can't resolve" escalation rule is off too.
 
 Every API call is cached in results/calls.jsonl with the exact prompt sent, so a rerun resumes
 without paying twice and a changed prompt is never answered from the cache.
-Scores follow PREREGISTRATION.md. Output: results/results.json.
+Output: results/results.json (git-ignored).
 
     python3 evals/indirection/judges.py [--runs 3] [--workers 8] [--only ID,ID]
 """
@@ -32,7 +32,8 @@ sys.path.insert(0, str(REPO))
 
 from autoguard import jev  # noqa: E402
 from autoguard.evals import LLM_PROMPT, llm_verdict, pct  # noqa: E402
-from autoguard.fixtures import build, load_library  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from fixtures_lib import build, load_library  # noqa: E402
 from autoguard.guard import QUESTIONS, build_state, decide  # noqa: E402
 from autoguard.policy import DEFAULTS  # noqa: E402
 from autoguard.resolve import resolve  # noqa: E402
@@ -96,7 +97,7 @@ def call(judge, state, unresolved):
 
 
 def majority(actions):
-    """Majority of the runs; if they all differ, the least strict verdict (per PREREGISTRATION.md)."""
+    """Majority of the runs; if they all differ, the least strict verdict (the rule fixed before round 1)."""
     counts = {a: actions.count(a) for a in actions}
     best = max(counts.values())
     top = [a for a, n in counts.items() if n == best]

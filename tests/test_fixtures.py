@@ -12,7 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from autoguard.fixtures import FixtureError, build, load_library  # noqa: E402
+sys.path.insert(0, str(ROOT / "evals" / "indirection"))
+from fixtures_lib import FixtureError, build, load_library  # noqa: E402
 
 CASES = ROOT / "evals" / "indirection" / "cases.jsonl"
 
