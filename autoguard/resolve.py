@@ -141,7 +141,10 @@ class _FS:
                 except OSError:
                     continue
             paths = sorted(found)
-        return [p for p in paths if self.lexists(p)], truncated
+        paths = [p for p in paths if self.lexists(p)]
+        if pattern.endswith("/"):  # a trailing slash only matches folders (or links to them)
+            paths = [p for p in paths if self.isdir(p)]
+        return paths, truncated
 
     def files_under(self, vpath):
         """Up to MAX_FILES paths an `rm -r` of this resolved path would delete. rm never follows links inside."""
@@ -291,8 +294,9 @@ def resolve(command, cwd=None, env=None, root=None):
             if path in seen or not fs.lexists(path):
                 continue
             seen.add(path)
-            label = raw if not is_glob else path.rsplit("/", 1)[-1]
-            t = target(raw if not is_glob else label, path, prog)
+            # The shell keeps a pattern's trailing slash on each match (*/ gives logs/), and rm follows it.
+            label = raw if not is_glob else path.rsplit("/", 1)[-1] + ("/" if token.endswith("/") else "")
+            t = target(label, path, prog)
             res.targets.append(t)
             note = describe(label, t, expanded, prog)
             if note:

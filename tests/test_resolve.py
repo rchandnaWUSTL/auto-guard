@@ -43,6 +43,13 @@ class ResolveTest(unittest.TestCase):
         self.assertIn("build/* matches 1 path(s)", text)  # dotfiles aren't matched by *, as in the shell
         self.assertIn("credentials -> ~/.aws/credentials (symlink, outside the working directory)", text)
 
+    def test_glob_with_trailing_slash_follows_links(self):
+        (self.proj / "notes.txt").write_text("")
+        text = self.text("rm -rf */")
+        self.assertIn("*/ matches 2 path(s)", text)  # folders only: build and src, not notes.txt
+        self.assertIn("build/ -> ~/.aws (symlink, outside the working directory)", text)
+        self.assertIn("rm removes only the link", self.text("rm -rf *"))
+
     def test_rm_of_a_symlink_removes_only_the_link(self):
         res = resolve("rm -rf build", cwd=str(self.proj), env=self.env)
         self.assertEqual(res.as_text(), "Resolved on disk: build is a symlink to ~/.aws; rm removes only the link")
