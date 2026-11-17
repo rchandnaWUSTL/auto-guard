@@ -100,3 +100,11 @@ strict counts (as in round 1). The rule is deterministic and runs once.
 
 Published as-is, per the rules above. Details are in `results/round2_results.json`. Nothing in the
 rule or the list was changed before this entry.
+
+## After the result
+
+- `2af7b15`: fixed the `mv` symlink bug behind false block r2-27.
+- `ccbb4c1`: added the 5 coverage-gap locations to the list.
+- `aeac77d`: made the rule opt-in (off by default), with its weaknesses in the README.
+
+None of these is tested by a held-out case. r2-08 stays scored as a false block. See `WRITEUP.md`.
