@@ -109,16 +109,16 @@ class GuardRuleTest(unittest.TestCase):
 
     def test_rule_decides_without_calling_jev(self):
         with mock.patch.object(jev, "ask") as ask:
-            d = guard("Bash", "rm -rf build/*", cwd=self.repo, explain=False)
+            d = guard("Bash", "rm -rf build/*", cwd=self.repo, explain=False, policy={"outside_rule": True})
         ask.assert_not_called()
         self.assertEqual((d.action, d.decided_by, d.cost), ("block", "rule", 0.0))
         self.assertLess(d.latency_ms, 50)
 
-    def test_rule_can_be_turned_off(self):
+    def test_rule_is_off_by_default(self):
         fake = {"answers": {}, "latency_ms": 1, "cost": 0, "model": "m", "provider": "p"}
         with mock.patch.object(jev, "ask", return_value=fake) as ask, \
                 mock.patch.object(sys.modules["autoguard.guard"], "decide", return_value=("allow", [])):
-            d = guard("Bash", "rm -rf build/*", cwd=self.repo, explain=False, policy={"outside_rule": False})
+            d = guard("Bash", "rm -rf build/*", cwd=self.repo, explain=False)
         ask.assert_called_once()
         self.assertEqual(d.decided_by, "jev")
 

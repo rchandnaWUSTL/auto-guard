@@ -28,9 +28,10 @@ DEFAULTS = {
     # Resolve paths, symlinks, globs and variables before Jev sees a shell command. Turning this off
     # (or setting AUTOGUARD_RESOLVE=0) makes Jev judge the raw text only; it's for comparisons, not daily use.
     "resolve": True,
-    # Decide without Jev when a shell command writes outside the working folder: block if it
-    # reaches a sensitive path (autoguard/rule.py), otherwise escalate. Needs "resolve".
-    "outside_rule": True,
+    # Opt-in: decide without Jev when a shell command writes outside the working folder: block if
+    # it reaches a sensitive path (autoguard/rule.py), otherwise escalate. Needs "resolve". Off by
+    # default because it blocks secret edits you asked for and has measured false blocks (README).
+    "outside_rule": False,
     # More home-relative paths to treat as sensitive, e.g. [".config/stripe"].
     "sensitive_paths_extra": [],
     # Always escalate these action classes (Jev's action_class answer).
