@@ -24,6 +24,14 @@ _OPS = {"&&", "||", ";", "|", "&", "(", ")", ";;"}
 # rm and unlink act on a symlink itself unless the path ends in "/" (or a glob reaches through it).
 _LINK_ONLY = {"rm", "unlink"}
 
+# Which arguments a command writes to or deletes. Everything else is treated as read-only.
+WRITE_ALL = {"rm", "unlink", "rmdir", "shred", "mv", "touch", "truncate", "chmod", "chown", "chgrp", "tee", "mkdir"}
+WRITE_LAST = {"cp", "install", "ln"}          # only the destination (the last path) is written
+CREATES = {"touch", "mkdir", "tee", "truncate"}   # can create a path that doesn't exist yet (plus cp/install/ln/mv targets)
+_WRAPPERS = {"sudo", "command", "nice", "nohup", "time", "env"}   # the real program is the next word
+_REDIRECTS = {">", ">>", ">|", "&>", "&>>"}
+_ASSIGN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
+
 MAX_NOTES = 12
 MAX_HOPS = 40          # symlinks followed for one path before calling it a loop (Linux uses 40)
 MAX_SCAN = 5000        # directory entries read across all globs in one command
@@ -44,6 +52,9 @@ class Target:
     files: list = field(default_factory=list)  # what an rm would delete (capped at MAX_FILES)
     more_files: bool = False                    # there were more than MAX_FILES
     loop: bool = False                          # symlink chain too long to follow
+    prog: str = ""                              # the program this argument belongs to ("" for a redirect)
+    write: bool = False                         # the command writes to or deletes this path (see WRITERS)
+    new: bool = False                           # doesn't exist yet; resolved through its parent folder
 
 
 @dataclass
@@ -51,6 +62,8 @@ class Resolution:
     notes: list = field(default_factory=list)       # what the command really points at
     unresolved: list = field(default_factory=list)  # things Auto-Guard can't see
     targets: list = field(default_factory=list)     # structured version, one Target per path argument
+    cwd: str = ""                                   # the working folder, resolved
+    home: str = ""                                  # the home folder, resolved
 
     def as_text(self):
         lines = []
@@ -196,7 +209,8 @@ def resolve(command, cwd=None, env=None, root=None):
         home = env.get("HOME", "/")
         cwd = "/" + (cwd or "/").strip("/")
     cwd, _, _ = fs.walk(cwd)
-    home = home.rstrip("/") or "/"
+    home, _, _ = fs.walk(home.rstrip("/") or "/")
+    res.cwd, res.home = cwd, home
 
     def shown(vpath):
         if home != "/" and (vpath == home or vpath.startswith(home + "/")):
@@ -222,8 +236,9 @@ def resolve(command, cwd=None, env=None, root=None):
             return None
         return "%s -> %s%s" % (label, shown(t.lands), " (%s)" % ", ".join(bits) if bits else "")
 
-    def target(raw, vpath, prog):
-        link_only = prog in _LINK_ONLY and not raw.endswith("/")
+    def target(raw, vpath, prog, link_only=None):
+        if link_only is None:
+            link_only = prog in _LINK_ONLY and not raw.endswith("/")
         lands, hops, loop = fs.walk(vpath, follow_last=not link_only)
         t = Target(arg=raw, path=vpath, lands=lands, hops=hops, loop=loop)
         t.inside = inside(lands)
@@ -246,40 +261,23 @@ def resolve(command, cwd=None, env=None, root=None):
         res.unresolved.append("command could not be parsed")
         return res
 
-    here = cwd
-    prog = ""
-    expect_cd_target = False
-    at_command_start = True  # the first word of each command is the program, not an argument
-    seen = set()
-    for raw in tokens:
-        if raw in _OPS:
-            expect_cd_target = False
-            at_command_start = True
-            continue
-        if at_command_start:
-            at_command_start = False
-            prog = os.path.basename(raw)
-            if raw == "cd":
-                expect_cd_target = True
-            continue
-        token = _expand_vars(raw, env, res)
-        if token.startswith("~"):
-            token = home + token[1:]
-        expanded = token != raw
-        if expect_cd_target:
-            expect_cd_target = False
-            dest = _join(here, token)
-            if fs.isdir(dest):
-                t = target(raw, dest, "cd")
-                here = t.lands
-                note = describe(raw, t, expanded)
-                if note:
-                    res.notes.append("cd " + note)
-                    res.targets.append(t)
-            continue
-        on_disk = not token.startswith("/") and fs.lexists(_join(here, token))
-        if token.startswith("-") or "$" in token or not (_looks_like_path(token) or expanded or on_disk):
-            continue
+    def writes(prog, words, idx):
+        """Is the path at position idx (in this command's words, program excluded) written to?"""
+        if prog in WRITE_ALL:
+            return True
+        if prog in WRITE_LAST:
+            paths = [i for i, w in enumerate(words) if not w.startswith("-")]
+            return bool(paths) and idx == paths[-1]
+        if prog == "sed":
+            return any(w == "-i" or w.startswith("-i") or w.startswith("--in-place") for w in words)
+        if prog == "find" and any(w in ("-delete", "-exec", "-execdir", "-ok", "-okdir") for w in words):
+            first_expr = next((i for i, w in enumerate(words) if (w.startswith("-") and w not in ("-H", "-L", "-P"))
+                               or w in ("(", "!")), len(words))
+            return idx < first_expr
+        return False
+
+    def add(raw, token, here, expanded, prog, write, may_create=False, acts_on_link=False):
+        """Resolve one argument (expanding globs) and record what it points at."""
         pattern = _join(here, token)
         is_glob = bool(_MAGIC.search(token))
         if is_glob:
@@ -291,14 +289,95 @@ def resolve(command, cwd=None, env=None, root=None):
         else:
             matches = [pattern]
         for path in matches:
-            if path in seen or not fs.lexists(path):
+            if (path, write) in seen:
                 continue
-            seen.add(path)
             # The shell keeps a pattern's trailing slash on each match (*/ gives logs/), and rm follows it.
             label = raw if not is_glob else path.rsplit("/", 1)[-1] + ("/" if token.endswith("/") else "")
-            t = target(label, path, prog)
+            if fs.lexists(path):
+                t = target(label, path, prog, (acts_on_link and not label.endswith("/")) or None)
+            elif write and may_create and not is_glob:
+                # A file the command will create: where it lands depends on its parent folder.
+                parent, name = (path.rstrip("/").rsplit("/", 1) + [""])[:2]
+                if not name or not fs.isdir(parent or "/"):
+                    continue
+                lands, hops, loop = fs.walk(parent or "/")
+                t = Target(arg=label, path=path, lands=_join(lands, name), hops=hops, loop=loop, new=True)
+                t.inside = inside(t.lands)
+            else:
+                continue
+            seen.add((path, write))
+            t.prog, t.write = prog, write
             res.targets.append(t)
             note = describe(label, t, expanded, prog)
             if note:
-                res.notes.append(note)
+                res.notes.append(note + (" (new file)" if t.new and "(" not in note else ""))
+
+    def finish(prog, words, args, redirects):
+        paths = [i for i, w in enumerate(words) if not w.startswith("-")]
+        # Like rm, these act on a symlink itself unless told to follow it: sed -i replaces the link
+        # with a plain file (no --follow-symlinks), and find doesn't descend into a starting-point
+        # link (no -L/-H) unless it ends in "/".
+        on_link = (prog == "sed" and not any(w.startswith("--follow-symlinks") for w in words)) or \
+                  (prog == "find" and not any(w in ("-L", "-H") for w in words))
+        for idx, raw, token, here_, expanded in args:
+            w = writes(prog, words, idx)
+            last = bool(paths) and idx == paths[-1]
+            add(raw, token, here_, expanded, prog, w, w and (prog in CREATES or (prog in WRITE_LAST | {"mv"} and last)),
+                acts_on_link=on_link and w)
+        for raw, token, here_, expanded in redirects:
+            add(raw, token, here_, expanded, "", True, True)
+
+    here = cwd
+    prog = ""
+    words, args, redirects = [], [], []
+    expect_cd_target = False
+    expect_redirect = False
+    at_command_start = True  # the first word of each command is the program, not an argument
+    seen = set()
+    for raw in tokens + [";"]:
+        if raw in _OPS:
+            finish(prog, words, args, redirects)
+            prog, words, args, redirects = "", [], [], []
+            expect_cd_target = expect_redirect = False
+            at_command_start = True
+            continue
+        if raw in _REDIRECTS or raw == ">&":
+            expect_redirect = raw != ">&"
+            continue
+        if at_command_start:
+            if _ASSIGN.match(raw) or os.path.basename(raw) in _WRAPPERS:
+                continue  # FOO=bar cmd / sudo cmd: the program is still to come
+            at_command_start = False
+            prog = os.path.basename(raw)
+            if raw == "cd":
+                expect_cd_target = True
+            continue
+        token = _expand_vars(raw, env, res)
+        if token.startswith("~"):
+            token = home + token[1:]
+        expanded = token != raw
+        if expect_redirect:
+            expect_redirect = False
+            if "$" not in token and not token.isdigit() and not token.startswith("/dev/"):
+                redirects.append((raw, token, here, expanded))
+            continue
+        if expect_cd_target:
+            expect_cd_target = False
+            dest = _join(here, token)
+            if fs.isdir(dest):
+                t = target(raw, dest, "cd")
+                here = t.lands
+                note = describe(raw, t, expanded)
+                if note:
+                    res.notes.append("cd " + note)
+                    res.targets.append(t)
+            continue
+        idx = len(words)
+        words.append(raw)
+        on_disk = not token.startswith("/") and fs.lexists(_join(here, token))
+        if token.startswith("-") or "$" in token:
+            continue
+        if not (_looks_like_path(token) or expanded or on_disk) and not (writes(prog, words, idx) and prog in WRITE_ALL | WRITE_LAST):
+            continue
+        args.append((idx, raw, token, here, expanded))
     return res

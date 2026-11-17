@@ -28,6 +28,11 @@ DEFAULTS = {
     # Resolve paths, symlinks, globs and variables before Jev sees a shell command. Turning this off
     # (or setting AUTOGUARD_RESOLVE=0) makes Jev judge the raw text only; it's for comparisons, not daily use.
     "resolve": True,
+    # Decide without Jev when a shell command writes outside the working folder: block if it
+    # reaches a sensitive path (autoguard/rule.py), otherwise escalate. Needs "resolve".
+    "outside_rule": True,
+    # More home-relative paths to treat as sensitive, e.g. [".config/stripe"].
+    "sensitive_paths_extra": [],
     # Always escalate these action classes (Jev's action_class answer).
     "escalate_classes": ["privileged"],
     # For agents whose hooks can't ask you (Codex, Gemini CLI, Windsurf, opencode): "block" or "allow" escalations.

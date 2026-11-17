@@ -9,6 +9,7 @@ from . import jev
 from . import log as _log
 from . import policy as _policy
 from .resolve import resolve
+from . import rule as _rule
 
 ALLOW, BLOCK, ESCALATE = "allow", "block", "escalate"
 
@@ -67,6 +68,7 @@ class Decision:
     escalation_latency_ms: Optional[float] = None
     resolved: str = ""
     resolve: bool = True  # False: judged on the raw text only (AUTOGUARD_RESOLVE=0)
+    decided_by: str = "jev"  # "rule": the outside-the-folder rule decided without calling Jev
     error: Optional[str] = None
 
     @property
@@ -141,6 +143,16 @@ def guard(tool, args, task="", plan="", policy=None, log=True, explain=True, cwd
     resolved = res.as_text() if res else ""
     unresolved = res.unresolved if res else []
     state, args_str = build_state(tool, args, task, plan, resolved)
+    if res is not None and policy["outside_rule"]:
+        hit, rule_ms = _rule.timed_check(res, policy["sensitive_paths_extra"])
+        if hit:
+            action, reasons = hit
+            decision = Decision(action, reasons, tool, args_str, task, latency_ms=round(rule_ms, 3), cost=0.0,
+                                rationale=reasons[0] if action == ESCALATE else None,
+                                resolved=resolved, decided_by="rule")
+            if log:
+                _log.append(decision.to_dict())
+            return decision
     try:
         result = jev.ask(state, QUESTIONS, timeout=policy["timeout_s"])
     except jev.JevError as e:

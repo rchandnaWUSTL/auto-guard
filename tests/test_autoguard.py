@@ -101,7 +101,7 @@ class GuardTest(unittest.TestCase):
             os.symlink(os.path.expanduser("~"), os.path.join(d, "build"))
             for env, expect_resolved in (({}, True), ({"AUTOGUARD_RESOLVE": "0"}, False)):
                 with mock.patch.dict(os.environ, env), mock.patch.object(jev, "ask", return_value=fake) as ask:
-                    dec = guard("Bash", "rm -rf build/", cwd=d, explain=False)
+                    dec = guard("Bash", "rm -rf build/", cwd=d, explain=False, policy={"outside_rule": False})
                 state = ask.call_args[0][0]
                 self.assertEqual("Resolved on disk" in state, expect_resolved, env)
                 self.assertEqual(dec.resolve, expect_resolved)

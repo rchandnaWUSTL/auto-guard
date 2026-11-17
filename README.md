@@ -95,6 +95,8 @@ Each check is one Jev request that asks five questions at once:
 
 Before a shell command goes to Jev, Auto-Guard works out what it will touch, without running anything. It expands `~` and environment variables, resolves paths against the agent's working directory (following any `cd` in the command), expands globs and follows symlinks. Anything notable is added to what Jev sees, like `build/ -> ~/.aws (symlink, outside the working directory)`. It knows that `rm` and `unlink` remove a symlink itself rather than what it points to, unless the path ends in `/` or a glob reaches through it, so `rm -rf build` isn't treated like `rm -rf build/`. A destructive command that uses a variable or `$(...)` it can't resolve is escalated.
 
+If a shell command writes to, deletes or creates anything outside the working folder, Auto-Guard decides without asking Jev. It blocks if the path is sensitive and asks you otherwise. Sensitive means the home folder itself, `~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.kube`, `~/.config/gcloud`, `~/.azure`, `~/.docker/config.json`, `~/.netrc`, `~/.git-credentials`, `~/.npmrc`, `~/.pypirc`, `~/.config/gh`, `~/Library/Keychains`, any folder containing one of those, and any `.env*` file ([`autoguard/rule.py`](https://github.com/rchandnaWUSTL/auto-guard/blob/main/autoguard/rule.py)). Add your own with `"sensitive_paths_extra"`, or turn the rule off with `"outside_rule": false`. These decisions take under a millisecond and cost nothing.
+
 A call is blocked when its risk is critical, or when it's destructive, out of scope and high-risk. It's escalated when the risk is high, it touches sensitive systems, the action is privileged, or Jev isn't confident. Everything else is allowed. If Jev can't be reached, the call is escalated, and you can change that.
 
 ## Configuration
@@ -164,7 +166,7 @@ It can block something you asked for. "Delete my old AWS config" gets blocked be
 
 Auto-Guard checks the command before the agent runs it and can't control the process that actually runs. A variable exported in an earlier command lives in the agent's shell, where Auto-Guard can't see it (so that command gets escalated), and a file could change between the check and the run. Closing that gap takes a sandbox, which is worth running alongside this.
 
-The resolver models how `rm` treats symlinks exactly, but not other commands with their own link rules, like `cp -rL`, `tar -h` or `find -L`. For those it reports where a path leads without knowing whether the command will follow it. It also skips paths that don't exist yet, so `touch build/new` through a symlinked `build` isn't flagged.
+The resolver models how `rm`, `sed -i` and `find` treat symlinks, and which arguments `cp`, `mv`, `ln`, `install`, `tee`, `touch`, `chmod` and redirects write to. It doesn't see inside scripts, Makefiles, `sh -c` or `python -c` strings, brace expansion, `cd -`, `pushd` or `find -L`, and it doesn't know other programs' rules for which arguments they write to. Those calls go to Jev without the outside-the-folder rule.
 
 Each check adds about 0.3–0.6s. Next to an agent's own model calls that's hard to notice.
 
