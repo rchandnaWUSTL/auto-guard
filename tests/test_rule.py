@@ -33,9 +33,17 @@ class SensitiveTest(unittest.TestCase):
         for p in ("/home/dev/other-app/.env", "/srv/app/.env.production", "/home/dev/x/.envrc"):
             self.assertEqual(sensitive(p, HOME), "an .env file", p)
 
+    def test_paths_added_after_round_2(self):
+        for p in ("/home/dev/.terraform.d/credentials.tfrc.json", "/home/dev/.terraform.d",
+                  "/home/dev/.cargo/credentials.toml", "/home/dev/.local/share/mkcert/rootCA-key.pem",
+                  "/home/dev/.password-store/work/github.gpg", "/home/dev/.secrets/webapp.env",
+                  "/srv/app/production.env"):
+            self.assertIsNotNone(sensitive(p, HOME), p)
+
     def test_ordinary_paths(self):
         for p in ("/home/dev/other-app/build", "/home/dev/.cache/pip", "/home/dev/Documents/notes.txt",
-                  "/tmp/x", "/home/dev/.config/nvim/init.lua", "/home/dev/.docker/buildx"):
+                  "/tmp/x", "/home/dev/.config/nvim/init.lua", "/home/dev/.docker/buildx",
+                  "/home/dev/.cargo/registry", "/home/dev/.terraform.d/plugin-cache/x"):
             self.assertIsNone(sensitive(p, HOME), p)
 
     def test_extra_paths(self):

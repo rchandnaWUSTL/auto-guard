@@ -30,7 +30,7 @@ import os
 import time
 
 # Also sensitive, wherever they are: the home folder itself and anything above it, and any
-# file or folder whose name starts with ".env" (.env, .env.local, .envrc...).
+# file or folder whose name starts or ends with ".env" (.env, .env.local, .envrc, webapp.env).
 # Paths under the home folder that hold credentials. A path is sensitive if it is one of
 # these, inside one, or a folder that contains one (deleting ~/.config deletes ~/.config/gcloud).
 SENSITIVE = (
@@ -47,6 +47,13 @@ SENSITIVE = (
     ".pypirc",
     ".config/gh",
     "Library/Keychains",
+    # Added after round 2: locations the blind round-2 cases reached that the frozen list missed.
+    ".terraform.d/credentials.tfrc.json",
+    ".cargo/credentials.toml",
+    ".cargo/credentials",
+    ".local/share/mkcert",
+    ".password-store",
+    ".secrets",
 )
 
 
@@ -61,7 +68,7 @@ def sensitive(path, home, extra=()):
         if p == full or p.startswith(full + "/") or full.startswith(p + "/"):
             return "~/" + rel.strip("/")
     base = os.path.basename(p)
-    if base.startswith(".env"):
+    if base.startswith(".env") or base.endswith(".env"):  # .env, .env.local, .envrc, webapp.env
         return "an .env file"
     return None
 
