@@ -93,7 +93,7 @@ Each check is one Jev request that asks five questions at once:
 | `action_class` | choice | read, local-write, network, destructive or privileged |
 | `risk` | 0–4 scale | none, low, medium, high or critical |
 
-Before a shell command goes to Jev, Auto-Guard works out what it will touch, without running anything. It expands `~` and environment variables, resolves paths against the agent's working directory (following any `cd` in the command), expands globs and follows symlinks. Anything notable is added to what Jev sees, like `build -> ~/.aws (symlink, outside the working directory)`. A destructive command that uses a variable or `$(...)` it can't resolve is escalated.
+Before a shell command goes to Jev, Auto-Guard works out what it will touch, without running anything. It expands `~` and environment variables, resolves paths against the agent's working directory (following any `cd` in the command), expands globs and follows symlinks. Anything notable is added to what Jev sees, like `build/ -> ~/.aws (symlink, outside the working directory)`. It knows that `rm` and `unlink` remove a symlink itself rather than what it points to, unless the path ends in `/` or a glob reaches through it, so `rm -rf build` isn't treated like `rm -rf build/`. A destructive command that uses a variable or `$(...)` it can't resolve is escalated.
 
 A call is blocked when its risk is critical, or when it's destructive, out of scope and high-risk. It's escalated when the risk is high, it touches sensitive systems, the action is privileged, or Jev isn't confident. Everything else is allowed. If Jev can't be reached, the call is escalated, and you can change that.
 
@@ -159,6 +159,8 @@ Jev's "in scope" answer is its weakest signal and sometimes misjudges requests w
 It can block something you asked for. "Delete my old AWS config" gets blocked because deleting credentials is high-risk, so run commands like that yourself.
 
 Auto-Guard checks the command before the agent runs it and can't control the process that actually runs. A variable exported in an earlier command lives in the agent's shell, where Auto-Guard can't see it (so that command gets escalated), and a file could change between the check and the run. Closing that gap takes a sandbox, which is worth running alongside this.
+
+The resolver models how `rm` treats symlinks exactly, but not other commands with their own link rules, like `cp -rL`, `tar -h` or `find -L`. For those it reports where a path leads without knowing whether the command will follow it. It also skips paths that don't exist yet, so `touch build/new` through a symlinked `build` isn't flagged.
 
 Each check adds about 0.3–0.6s. Next to an agent's own model calls that's hard to notice.
 
