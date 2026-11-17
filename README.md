@@ -122,6 +122,8 @@ To change a threshold, put a JSON file at `.autoguard.json` (one project) or `~/
 }
 ```
 
+To see how Jev does on the raw text alone, with no path resolution, set `AUTOGUARD_RESOLVE=0` (or `"resolve": false`). Those decisions are logged with `"resolve": false` and shown as "text only" in the console. It's for comparisons, not daily use.
+
 Every setting and its default is in [`autoguard/policy.py`](https://github.com/rchandnaWUSTL/auto-guard/blob/main/autoguard/policy.py).
 
 Every decision is appended to `~/.autoguard/decisions.jsonl`, or to the path in `AUTOGUARD_LOG`. Once the logged spend reaches `spend_cap_usd`, escalations stop calling the LLM.

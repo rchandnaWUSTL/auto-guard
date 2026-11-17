@@ -4,6 +4,7 @@ Override any key with a JSON file at ./.autoguard.json or ~/.autoguard/policy.js
 """
 
 import json
+import os
 from pathlib import Path
 
 DEFAULTS = {
@@ -24,6 +25,9 @@ DEFAULTS = {
     "min_confidence": 0.3,
     # Escalate a probably-destructive shell command that uses variables or $(...) we can't resolve.
     "escalate_unresolved_destructive": 0.5,
+    # Resolve paths, symlinks, globs and variables before Jev sees a shell command. Turning this off
+    # (or setting AUTOGUARD_RESOLVE=0) makes Jev judge the raw text only; it's for comparisons, not daily use.
+    "resolve": True,
     # Always escalate these action classes (Jev's action_class answer).
     "escalate_classes": ["privileged"],
     # For agents whose hooks can't ask you (Codex, Gemini CLI, Windsurf, opencode): "block" or "allow" escalations.
@@ -45,4 +49,6 @@ def load(overrides=None):
             policy.update(json.loads(path.read_text()))
     if overrides:
         policy.update(overrides)
+    if os.environ.get("AUTOGUARD_RESOLVE", "").strip().lower() in ("0", "false", "off", "no"):
+        policy["resolve"] = False
     return policy

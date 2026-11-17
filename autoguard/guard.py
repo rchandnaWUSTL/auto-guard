@@ -66,6 +66,7 @@ class Decision:
     escalation_cost: Optional[float] = None
     escalation_latency_ms: Optional[float] = None
     resolved: str = ""
+    resolve: bool = True  # False: judged on the raw text only (AUTOGUARD_RESOLVE=0)
     error: Optional[str] = None
 
     @property
@@ -135,7 +136,8 @@ def guard(tool, args, task="", plan="", policy=None, log=True, explain=True, cwd
     For shell commands, paths, symlinks, globs and variables are resolved against `cwd`
     first (read-only), so Jev judges what the command will touch, not just its text."""
     policy = _policy.load(policy)
-    res = resolve(args, cwd) if tool.lower() in SHELL_TOOLS and isinstance(args, str) else None
+    is_shell = tool.lower() in SHELL_TOOLS and isinstance(args, str)
+    res = resolve(args, cwd) if is_shell and policy["resolve"] else None
     resolved = res.as_text() if res else ""
     unresolved = res.unresolved if res else []
     state, args_str = build_state(tool, args, task, plan, resolved)
@@ -143,12 +145,14 @@ def guard(tool, args, task="", plan="", policy=None, log=True, explain=True, cwd
         result = jev.ask(state, QUESTIONS, timeout=policy["timeout_s"])
     except jev.JevError as e:
         action = policy["on_error"]
-        decision = Decision(action, ["Jev unavailable, policy on_error=%s" % action], tool, args_str, task, error=str(e))
+        decision = Decision(action, ["Jev unavailable, policy on_error=%s" % action], tool, args_str, task,
+                            resolve=policy["resolve"], error=str(e))
     else:
         action, reasons = decide(result["answers"], policy, unresolved)
         decision = Decision(
             action, reasons, tool, args_str, task,
             answers=result["answers"], latency_ms=result["latency_ms"], cost=result["cost"], resolved=resolved,
+            resolve=policy["resolve"],
         )
     if decision.action == ESCALATE and explain and policy.get("escalation_model"):
         if _log.total_spend() < policy["spend_cap_usd"]:

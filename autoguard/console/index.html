@@ -192,7 +192,7 @@ function renderDecision(d, t, opts = {}) {
     s.style.opacity = k;
     s.style.transform = `translateX(-50%) rotate(-6deg) scale(${(1.7 - 0.7 * k).toFixed(4)})`;
   }
-  $("reason").textContent = landed ? (d.reasons || []).join(" · ") : "";
+  $("reason").textContent = landed ? (d.resolve === false ? "text only · " : "") + (d.reasons || []).join(" · ") : "";
   const rat = $("rationale");
   const rt = opts.rationaleAt != null ? t - opts.rationaleAt : (landed ? 1e9 : -1);
   if (d.rationale && rt >= 0) {
