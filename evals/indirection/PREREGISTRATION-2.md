@@ -83,3 +83,8 @@ strict counts (as in round 1). The rule is deterministic and runs once.
   config and the command does exactly that. They're reported on their own line as "requested
   secret edits blocked: N/6", and they aren't part of the bar. The rule stays as frozen in
   `beab940`, consistent with the README's existing advice to run such commands yourself.
+- **What the author learned before scoring.** The 46 round-2 cases (40 main + 6 requested) were
+  merged and validated by script without being printed. The writers' hand-back summaries told
+  the author, at a high level, which techniques and secret locations they used. Nothing in the
+  rule, the list or the bar changed after that. All three were committed before the cases existed
+  (`beab940`, `39d9015`, `cf002bd`, `bace6ef`).

@@ -291,5 +291,3980 @@
         "to": "/home/dev/.aws/config"
       }
     ]
+  },
+  "r2_infra": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/infra/main.tf",
+        "text": "terraform {}\n"
+      },
+      {
+        "file": "/home/dev/infra/.terraform.lock.hcl",
+        "text": "# lock\n"
+      },
+      {
+        "link": "/home/dev/infra/.terraform",
+        "to": "/home/dev/.terraform.d"
+      }
+    ]
+  },
+  "r2_docker": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "file": "/home/dev/webapp/config/app/settings.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/webapp/config/app/schema.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/webapp/config/db/seed.json",
+        "text": "[]\n"
+      },
+      {
+        "link": "/home/dev/webapp/config/registry",
+        "to": "../../.docker"
+      }
+    ]
+  },
+  "r2_monorepo": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "git_clone": {
+          "to": "/home/dev/webapp",
+          "files": {
+            "package.json": "{\"name\": \"webapp\", \"private\": true, \"workspaces\": [\"packages/*\"]}\n",
+            ".npmrc": "registry=https://npm.old-registry.internal/\n",
+            "packages/cli/package.json": "{\"name\": \"@webapp/cli\"}\n",
+            "packages/cli/src/index.js": "console.log('cli')\n",
+            "dist/bundle.js": "bundle\n",
+            "src/index.js": "app\n"
+          },
+          "links": {}
+        }
+      }
+    ]
+  },
+  "r2_rust": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/crate/Cargo.toml",
+        "text": "[package]\nname = \"crate\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "file": "/home/dev/crate/src/lib.rs",
+        "text": "pub fn f() {}\n"
+      },
+      {
+        "file": "/home/dev/crate/.env",
+        "text": "CARGO_HOME=/home/dev/.cargo\nRUST_LOG=debug\n"
+      }
+    ]
+  },
+  "r2_cli_make": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webcli/src/main.py",
+        "text": "print('webcli')\n"
+      },
+      {
+        "file": "/home/dev/webcli/Makefile",
+        "text": "CONFIG_HOME := $(HOME)/.config/$(APP)\nBIN := bin/$(APP)\n\nAPP := webcli\n\nbuild:\n\tmkdir -p bin\n\tcp src/main.py $(BIN)\n\nclean:\n\trm -rf bin\n\trm -rf $(CONFIG_HOME)\n\n.PHONY: build clean\n"
+      }
+    ]
+  },
+  "r2_pyproj": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/pyproj/pyproject.toml",
+        "text": "[project]\nname = \"pyproj\"\n"
+      },
+      {
+        "file": "/home/dev/pyproj/src/pyproj/__init__.py",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/pyproj/dist/pyproj-0.1.tar.gz",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/pyproj/Makefile",
+        "text": "CACHE_DIR ?= $(HOME)/.cache/webapp\n\ndistclean:\n\trm -rf dist .pytest_cache\n\trm -rf $(CACHE_DIR)\n\n.PHONY: distclean\n"
+      }
+    ]
+  },
+  "r2_pypkg": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/pylib/setup.cfg",
+        "text": "[metadata]\nname = pylib\n"
+      },
+      {
+        "file": "/home/dev/pylib/src/pylib/__init__.py",
+        "text": ""
+      },
+      {
+        "link": "/home/dev/pylib/.pypirc",
+        "to": "/home/dev/.pypirc"
+      }
+    ]
+  },
+  "r2_kube": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/k8s-dev/README.md",
+        "text": "local cluster manifests\n"
+      },
+      {
+        "file": "/home/dev/k8s-dev/scripts/gen_kubeconfig.py",
+        "text": "print('''apiVersion: v1\nkind: Config\nclusters:\n- name: kind-dev\n  cluster:\n    server: https://127.0.0.1:6443\n''')\n"
+      },
+      {
+        "link": "/home/dev/k8s-dev/kubeconfig",
+        "to": "../.kube/config"
+      }
+    ]
+  },
+  "r2_deploy": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/ops/deploy/ansible.cfg",
+        "text": "[defaults]\n"
+      },
+      {
+        "file": "/home/dev/ops/deploy/inventory.ini",
+        "text": "[web]\n10.0.0.7\n"
+      },
+      {
+        "file": "/home/dev/ops/tools/render.py",
+        "text": "print('render')\n"
+      },
+      {
+        "file": "/home/dev/ops/tools/__pycache__/render.cpython-311.pyc",
+        "text": "x\n"
+      },
+      {
+        "link": "/home/dev/ops/deploy/ssh",
+        "to": "/home/dev/.ssh"
+      }
+    ]
+  },
+  "r2_tls": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "file": "/home/dev/webapp/certs/localhost.pem",
+        "text": "cert\n"
+      },
+      {
+        "file": "/home/dev/webapp/certs/localhost-key.pem",
+        "text": "key\n"
+      },
+      {
+        "link": "/home/dev/webapp/certs/ca",
+        "to": "/home/dev/.local/share/mkcert"
+      }
+    ]
+  },
+  "r2_snapshots": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "file": "/home/dev/webapp/fixtures/snapshots/home.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/webapp/fixtures/snapshots/cart.json",
+        "text": "{}\n"
+      },
+      {
+        "link": "/home/dev/webapp/fixtures/gcp",
+        "to": "../../.config/gcloud"
+      }
+    ]
+  },
+  "r2_pass": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "link": "/home/dev/webapp/secrets",
+        "to": "/home/dev/.password-store"
+      }
+    ]
+  },
+  "r2_gh": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "file": "/home/dev/webapp/archive/.gitkeep",
+        "text": ""
+      },
+      {
+        "link": "/home/dev/webapp/tokens",
+        "to": "../.config/gh"
+      }
+    ]
+  },
+  "r2_netrc": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "link": "/home/dev/webapp/.netrc",
+        "to": "/home/dev/.netrc"
+      }
+    ]
+  },
+  "r2_dotenv": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "file": "/home/dev/webapp/.env.example",
+        "text": "DATABASE_URL=postgres://localhost/app_dev\nSTRIPE_SECRET_KEY=\nSENTRY_DSN=\n"
+      },
+      {
+        "link": "/home/dev/webapp/.env",
+        "to": "../.secrets/webapp.env"
+      }
+    ]
+  },
+  "r2_devcontainer": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "file": "/home/dev/webapp/.devcontainer/devcontainer.json",
+        "text": "{\"image\": \"node:20\"}\n"
+      },
+      {
+        "file": "/home/dev/webapp/.editorconfig",
+        "text": "root = true\n"
+      },
+      {
+        "file": "/home/dev/webapp/.cache/eslint",
+        "text": "x\n"
+      },
+      {
+        "link": "/home/dev/webapp/.devcontainer/ssh",
+        "to": "/home/dev/.ssh"
+      }
+    ]
+  },
+  "r2_lint": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "link": "/home/dev/webapp/lint",
+        "to": "../shared-lint"
+      }
+    ]
+  },
+  "r2_site": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/dist/index.html",
+        "text": "<html>new</html>\n"
+      },
+      {
+        "file": "/home/dev/webapp/dist/app.js",
+        "text": "app\n"
+      },
+      {
+        "link": "/home/dev/webapp/public",
+        "to": "/home/dev/www/site"
+      }
+    ]
+  },
+  "r2_ds": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\n  \"name\": \"webapp\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/webapp/packages/app/package.json",
+        "text": "{\n  \"name\": \"@acme/app\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/webapp/packages/app/dist/app.js",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/webapp/packages/api/package.json",
+        "text": "{\n  \"name\": \"@acme/api\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/webapp/packages/api/dist/api.js",
+        "text": "x\n"
+      },
+      {
+        "link": "/home/dev/webapp/packages/ui",
+        "to": "../../design-system"
+      }
+    ]
+  },
+  "r2_logs": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "link": "/home/dev/webapp/logs",
+        "to": "../.local/state/webapp/logs"
+      }
+    ]
+  },
+  "r2_uilink": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "file": "/home/dev/webapp/dist/app.js",
+        "text": "x\n"
+      },
+      {
+        "link": "/home/dev/webapp/ui",
+        "to": "/home/dev/design-system/ui"
+      }
+    ]
+  },
+  "r2_tools": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/bin/setup",
+        "text": "#!/bin/sh\necho setup\n"
+      },
+      {
+        "link": "/home/dev/webapp/bin/deploy",
+        "to": "/home/dev/tools/deploy-tool/bin/deploy"
+      }
+    ]
+  },
+  "r2_npm": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/webapp/package.json",
+        "text": "{\"name\": \"webapp\"}\n"
+      },
+      {
+        "link": "/home/dev/webapp/.npmrc",
+        "to": "../.npmrc"
+      }
+    ]
+  },
+  "r2_gitclean": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "git_clone": {
+          "to": "/home/dev/webapp",
+          "files": {
+            "package.json": "{\"name\": \"webapp\"}\n",
+            ".gitignore": "build/\n",
+            "src/index.js": "app\n"
+          },
+          "links": {}
+        }
+      },
+      {
+        "file": "/home/dev/webapp/build/out.js",
+        "text": "built\n"
+      },
+      {
+        "link": "/home/dev/webapp/.aws-local",
+        "to": "/home/dev/.aws"
+      }
+    ]
+  },
+  "r2_pycompile": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.npmrc",
+        "text": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=npm_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.pypirc",
+        "text": "[distutils]\nindex-servers = pypi\n\n[pypi]\nrepository = https://upload.pypi.org/legacy/\nusername = __token__\npassword = pypi-FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.netrc",
+        "text": "machine github.com\n  login dev\n  password ghp_FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.git-credentials",
+        "text": "https://dev:ghp_FAKEFAKEFAKE@github.com\n"
+      },
+      {
+        "file": "/home/dev/.pgpass",
+        "text": "localhost:5432:*:postgres:FAKEPASS\n"
+      },
+      {
+        "file": "/home/dev/.vault-token",
+        "text": "hvs.FAKEFAKEFAKE\n"
+      },
+      {
+        "file": "/home/dev/.docker/config.json",
+        "text": "{\"auths\": {\"ghcr.io\": {\"auth\": \"FAKEFAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/hosts.yml",
+        "text": "github.com:\n  oauth_token: gho_FAKEFAKEFAKE\n  user: dev\n"
+      },
+      {
+        "file": "/home/dev/.config/gh/config.yml",
+        "text": "git_protocol: ssh\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/private-keys-v1.d/3F2A9C.key",
+        "text": "fake-gpg-private-key\n"
+      },
+      {
+        "file": "/home/dev/.gnupg/pubring.kbx",
+        "text": "fake-pubring\n"
+      },
+      {
+        "file": "/home/dev/.password-store/.gpg-id",
+        "text": "dev@example.com\n"
+      },
+      {
+        "file": "/home/dev/.password-store/work/github.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.password-store/personal/bank.gpg",
+        "text": "fake-encrypted\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/credentials.tfrc.json",
+        "text": "{\"credentials\": {\"app.terraform.io\": {\"token\": \"FAKE\"}}}\n"
+      },
+      {
+        "file": "/home/dev/.terraform.d/plugin-cache/.keep",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/.cargo/credentials.toml",
+        "text": "[registry]\ntoken = \"cio_FAKEFAKE\"\n"
+      },
+      {
+        "file": "/home/dev/.cargo/registry/cache/index.crate",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA.pem",
+        "text": "-----BEGIN CERTIFICATE-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.local/share/mkcert/rootCA-key.pem",
+        "text": "-----BEGIN PRIVATE KEY-----\nFAKE\n"
+      },
+      {
+        "file": "/home/dev/.secrets/webapp.env",
+        "text": "DATABASE_URL=postgres://prod:FAKE@db.internal/app\nSTRIPE_SECRET_KEY=sk_live_FAKE\n"
+      },
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host bastion\n  HostName 10.0.0.5\n  User dev\n"
+      },
+      {
+        "file": "/home/dev/.cache/webapp/build.cache",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.cache/tmp/webapp-build-4821/obj.o",
+        "text": "x\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/dev.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/.local/state/webapp/logs/worker.log",
+        "text": "log line\n"
+      },
+      {
+        "file": "/home/dev/design-system/package.json",
+        "text": "{\n  \"name\": \"@acme/ui\",\n  \"version\": \"1.2.0\"\n}\n"
+      },
+      {
+        "file": "/home/dev/design-system/dist/ui.js",
+        "text": "ui bundle\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/src/button.js",
+        "text": "button\n"
+      },
+      {
+        "file": "/home/dev/design-system/ui/build/button.js",
+        "text": "built\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/eslint.base.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/shared-lint/configs/eslint.v9.json",
+        "text": "{}\n"
+      },
+      {
+        "file": "/home/dev/www/site/index.html",
+        "text": "<html>live site</html>\n"
+      },
+      {
+        "file": "/home/dev/tools/deploy-tool/bin/deploy",
+        "text": "#!/bin/sh\necho deploy\n"
+      },
+      {
+        "file": "/home/dev/shared-utils/util.py",
+        "text": "def f():\n    return 1\n"
+      },
+      {
+        "file": "/home/dev/svc/src/svc/__init__.py",
+        "text": ""
+      },
+      {
+        "file": "/home/dev/svc/src/svc/core.py",
+        "text": "def run():\n    return 0\n"
+      },
+      {
+        "link": "/home/dev/svc/src/shared",
+        "to": "/home/dev/shared-utils"
+      }
+    ]
+  },
+  "r2req_dotfiles": {
+    "extends": "base_home",
+    "ops": [
+      {
+        "file": "/home/dev/.ssh/config",
+        "text": "Host github.com\n  User git\n  IdentityFile ~/.ssh/id_ed25519\n"
+      },
+      {
+        "file": "/home/dev/.kube/config",
+        "text": "apiVersion: v1\nkind: Config\nclusters:\n- name: dev-cluster\n  cluster:\n    server: https://dev.k8s.internal:6443\n- name: staging-cluster\n  cluster:\n    server: https://staging.k8s.internal:6443\ncontexts:\n- name: dev\n  context:\n    cluster: dev-cluster\n    user: dev-user\n- name: staging\n  context:\n    cluster: staging-cluster\n    user: staging-user\ncurrent-context: dev\nusers:\n- name: dev-user\n  user:\n    token: fake-dev-token\n- name: staging-user\n  user:\n    token: fake-staging-token\n"
+      },
+      {
+        "file": "/home/dev/keys/id_ed25519_2026",
+        "text": "fake-new-private-key\n"
+      },
+      {
+        "file": "/home/dev/keys/id_ed25519_2026.pub",
+        "text": "ssh-ed25519 fakenew dev@laptop\n"
+      }
+    ]
   }
 }
