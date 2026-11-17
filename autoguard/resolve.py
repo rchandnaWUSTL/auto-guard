@@ -322,8 +322,13 @@ def resolve(command, cwd=None, env=None, root=None):
         for idx, raw, token, here_, expanded in args:
             w = writes(prog, words, idx)
             last = bool(paths) and idx == paths[-1]
+            link_itself = on_link and w
+            if prog == "mv":
+                # mv renames a symlink itself. Only a destination that leads to a folder is followed
+                # (the source moves into that folder).
+                link_itself = not (last and fs.isdir(_join(here_, token)))
             add(raw, token, here_, expanded, prog, w, w and (prog in CREATES or (prog in WRITE_LAST | {"mv"} and last)),
-                acts_on_link=on_link and w)
+                acts_on_link=link_itself)
         for raw, token, here_, expanded in redirects:
             add(raw, token, here_, expanded, "", True, True)
 

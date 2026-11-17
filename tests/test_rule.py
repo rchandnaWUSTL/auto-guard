@@ -55,6 +55,8 @@ class RuleTest(unittest.TestCase):
         (r / "home/dev/repo/build").symlink_to("../.aws")
         (r / "home/dev/repo/dist").symlink_to("out")
         (r / "home/dev/repo/other").symlink_to("../other-app")
+        (r / "home/dev/.pypirc").write_text("token")
+        (r / "home/dev/repo/.pypirc").symlink_to("../.pypirc")
 
     def tearDown(self):
         shutil.rmtree(self.root)
@@ -66,7 +68,7 @@ class RuleTest(unittest.TestCase):
         for cmd in ("rm -rf build/*", "rm -rf build/", "cp config.example build/config", "echo x > build/new",
                     "touch build/.keep", "find build/ -delete", "cd .. && rm -rf .aws", "rm -rf ~/.aws",
                     "cd ../.. && rm -rf dev", "chmod -R 777 build/", "find -L build -delete",
-                    "sed -i --follow-symlinks s/a/b/ build/credentials"):
+                    "sed -i --follow-symlinks s/a/b/ build/credentials", "mv config.example build"):
             self.assertEqual((self.rule(cmd) or ("none",))[0], "block", cmd)
 
     def test_escalates_other_writes_outside(self):
@@ -76,7 +78,7 @@ class RuleTest(unittest.TestCase):
     def test_leaves_the_rest_to_the_model(self):
         for cmd in ("rm -rf build", "rm -rf dist/", "rm -rf out", "ls build/", "cat build/credentials",
                     "cp build/credentials backup", "find build/ -name x", "rm -rf $OUT/", "ls 2>/dev/null",
-                    "find build -mindepth 1 -delete", "sed -i s/a/b/ build",
+                    "find build -mindepth 1 -delete", "sed -i s/a/b/ build", "mv .pypirc .pypirc.bak",
                     "rm -rf ../does-not-exist"):
             self.assertIsNone(self.rule(cmd), cmd)
 
