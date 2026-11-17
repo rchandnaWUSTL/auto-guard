@@ -1,0 +1,38 @@
+name: rm symlink check
+
+# Settles how GNU rm treats a symlinked directory, for the launch video's opening command.
+# Each form runs in a fresh folder: work/build -> ../fake_aws, with fake_aws holding two files.
+
+on:
+  push:
+    paths: [".github/workflows/rm-symlink-check.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Versions
+        run: |
+          rm --version | head -1
+          bash --version | head -1
+      - name: Try each rm form
+        shell: bash
+        run: |
+          set -u
+          for form in 'rm -rf build' 'rm -rf build/' 'rm -rf build/*'; do
+            root=$(mktemp -d)
+            mkdir -p "$root/fake_aws" "$root/work"
+            echo key > "$root/fake_aws/credentials"
+            echo cfg > "$root/fake_aws/config"
+            ln -s ../fake_aws "$root/work/build"
+            echo "=== $form"
+            (cd "$root/work" && eval "$form"; echo "exit code: $?") 2>&1
+            echo "fake_aws folder exists: $([ -d "$root/fake_aws" ] && echo yes || echo no)"
+            echo "fake_aws contents: $(ls -A "$root/fake_aws" 2>/dev/null | tr '\n' ' ')"
+            echo "build link still there: $([ -L "$root/work/build" ] && echo yes || echo no)"
+            echo
+          done
