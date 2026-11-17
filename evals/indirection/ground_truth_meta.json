@@ -1,0 +1,9 @@
+{
+  "base_image": "debian:stable-slim",
+  "base_image_id": "sha256:5514ad7b3da9a22e8efd134ab33901f8fe47affb2f616203a66e625795665319",
+  "bash": "GNU bash, version 5.2.37(1)-release (x86_64-pc-linux-gnu)",
+  "rm": "rm (GNU coreutils) 9.7",
+  "commit": "566160c58af28ead960069fbcb971df02b7c02f0",
+  "cases": 117,
+  "mismatches": []
+}

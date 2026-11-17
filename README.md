@@ -10,7 +10,7 @@ Auto-Guard checks every tool call your coding agent makes before it runs. It sen
 
 A check takes about 0.4s and costs about $0.000025.
 
-[![Jev answers five safety questions in one request, in 419ms, while the same check with Claude Sonnet 5 takes 1,992ms](https://raw.githubusercontent.com/rchandnaWUSTL/auto-guard/main/demo/out/auto-guard-under-the-hood.gif)](https://github.com/rchandnaWUSTL/auto-guard/blob/main/demo/out/auto-guard-under-the-hood.mp4)
+[![Jev answers five safety questions in one request, in 419ms, while the same check with Claude Sonnet 5 takes 1,160ms](https://raw.githubusercontent.com/rchandnaWUSTL/auto-guard/main/demo/out/auto-guard-under-the-hood.gif)](https://github.com/rchandnaWUSTL/auto-guard/blob/main/demo/out/auto-guard-under-the-hood.mp4)
 
 ## Quick start
 
@@ -93,7 +93,9 @@ Each check is one Jev request that asks five questions at once:
 | `action_class` | choice | read, local-write, network, destructive or privileged |
 | `risk` | 0–4 scale | none, low, medium, high or critical |
 
-Before a shell command goes to Jev, Auto-Guard works out what it will touch, without running anything. It expands `~` and environment variables, resolves paths against the agent's working directory (following any `cd` in the command), expands globs and follows symlinks. Anything notable is added to what Jev sees, like `build -> ~/.aws (symlink, outside the working directory)`. A destructive command that uses a variable or `$(...)` it can't resolve is escalated.
+Before a shell command goes to Jev, Auto-Guard works out what it will touch, without running anything. It expands `~` and variables, follows `cd`, globs and symlinks, and adds anything notable to what Jev sees, like `build/ -> ~/.aws (symlink, outside the working directory)`. It knows `rm -rf build` removes only a symlink while `rm -rf build/` reaches through it. A destructive command that uses a variable or `$(...)` it can't resolve is escalated.
+
+**Optional: block writes outside the project** (`"outside_rule": true`, off by default). With this on, a shell command that writes outside the working folder is decided without Jev, in under a millisecond: it's blocked if it reaches a secret (`~/.ssh`, `~/.aws`, `.env` files and [others](https://github.com/rchandnaWUSTL/auto-guard/blob/main/autoguard/rule.py); add yours with `"sensitive_paths_extra"`), and you're asked otherwise. It's off by default because in [testing](https://github.com/rchandnaWUSTL/auto-guard/blob/main/evals/indirection/README.md) it also blocked secret edits users asked for ("add this host to my SSH config") and a couple of harmless commands, and it asks about every write outside the folder, including `/tmp`. On agents that can't ask, those writes are blocked.
 
 A call is blocked when its risk is critical, or when it's destructive, out of scope and high-risk. It's escalated when the risk is high, it touches sensitive systems, the action is privileged, or Jev isn't confident. Everything else is allowed. If Jev can't be reached, the call is escalated, and you can change that.
 
@@ -122,6 +124,8 @@ To change a threshold, put a JSON file at `.autoguard.json` (one project) or `~/
 }
 ```
 
+To see how Jev does on the raw text alone, with no path resolution, set `AUTOGUARD_RESOLVE=0` (or `"resolve": false`). Those decisions are logged with `"resolve": false` and shown as "text only" in the console. It's for comparisons, not daily use.
+
 Every setting and its default is in [`autoguard/policy.py`](https://github.com/rchandnaWUSTL/auto-guard/blob/main/autoguard/policy.py).
 
 Every decision is appended to `~/.autoguard/decisions.jsonl`, or to the path in `AUTOGUARD_LOG`. Once the logged spend reaches `spend_cap_usd`, escalations stop calling the LLM.
@@ -143,8 +147,10 @@ On a held-out set of 20 calls that was never used for tuning ([`evals/holdout.js
 | | Safe allowed | Dangerous caught | Ambiguous escalated | Median latency | Cost per check |
 |---|---|---|---|---|---|
 | **Auto-Guard (Jev)** | **8/8** | **8/8** | **4/4** | **428ms** | **$0.000025** |
-| Claude Haiku 4.5 as the guard | 8/8 | 8/8 | 3/4 | 823ms | $0.00012 |
-| Claude Sonnet 5 as the guard | 7/8 | 5/8 | 1/4 | 1,992ms | $0.00032 |
+| Claude Haiku 4.5 as the guard | 8/8 | 8/8 | 3/4 | 694ms | $0.00012 |
+| Claude Sonnet 5 as the guard | 8/8 | 8/8 | 2/4 | 1,160ms | $0.00029 |
+
+The Claude models are asked for a one-word verdict (allow, block or escalate) with thinking turned off.
 
 On the 61-call set the thresholds were tuned on, it allowed 26/26 safe calls and caught 25/25 dangerous ones.
 
@@ -160,6 +166,8 @@ It can block something you asked for. "Delete my old AWS config" gets blocked be
 
 Auto-Guard checks the command before the agent runs it and can't control the process that actually runs. A variable exported in an earlier command lives in the agent's shell, where Auto-Guard can't see it (so that command gets escalated), and a file could change between the check and the run. Closing that gap takes a sandbox, which is worth running alongside this.
 
+The resolver can't see inside scripts, Makefiles, `sh -c` or `python -c` strings, brace expansion, `cd -`, `pushd` or `find -L`. Those commands are judged on their text.
+
 Each check adds about 0.3–0.6s. Next to an agent's own model calls that's hard to notice.
 
 ## Development
@@ -172,7 +180,7 @@ cd demo && npm install && npm run video # rebuild the demo videos from recorded 
 
 ```
 autoguard/   guard(), policy, Jev client, agent hooks, CLI, live console
-evals/       labeled test calls and cached Jev answers
+evals/       labeled test calls, cached Jev answers, and the indirection eval
 tests/       unit tests
 demo/        demo scenes and the video pipeline (Playwright and Remotion)
 ```

@@ -1,0 +1,38 @@
+name: indirection ground truth
+
+# Runs every case in evals/indirection/cases.jsonl for real, each in a throwaway container with
+# no network, and records what it changed. That's the label for the indirection eval.
+
+on:
+  push:
+    paths:
+      - "evals/indirection/cases.jsonl"
+      - "evals/indirection/round2_cases.jsonl"
+      - "evals/indirection/fixtures.json"
+      - "evals/indirection/ground_truth.py"
+      - "evals/indirection/fixtures_lib.py"
+      - ".github/workflows/indirection-ground-truth.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run every case in a container
+        run: python3 evals/indirection/ground_truth.py
+      - name: Run every round-2 case in a container (ids only in the log)
+        if: hashFiles('evals/indirection/round2_cases.jsonl') != ''
+        run: python3 evals/indirection/ground_truth.py --cases evals/indirection/round2_cases.jsonl --quiet
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ground-truth
+          path: |
+            evals/indirection/ground_truth.jsonl
+            evals/indirection/ground_truth_meta.json
+            evals/indirection/round2_ground_truth.jsonl
+            evals/indirection/round2_ground_truth_meta.json

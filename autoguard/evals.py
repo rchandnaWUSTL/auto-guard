@@ -47,28 +47,36 @@ def collect(cases, cache_path):
     return out
 
 
-def llm_baseline(cases, model):
+def llm_verdict(state, model, timeout=60):
+    """Ask an OpenRouter model for a one-word verdict on `state`. Same request the baseline uses."""
     jev.load_env()
-    key = os.environ["OPENROUTER_API_KEY"]
+    body = json.dumps({
+        # Thinking off: with it on, models like Sonnet 5 spend the 16 tokens reasoning and return no answer.
+        "model": model, "max_tokens": 16, "temperature": 0, "usage": {"include": True},
+        "reasoning": {"enabled": False},
+        "messages": [{"role": "user", "content": LLM_PROMPT.format(state=state)}],
+    }).encode()
+    req = urllib.request.Request(
+        "https://openrouter.ai/api/v1/chat/completions", data=body,
+        headers={"Authorization": "Bearer " + os.environ["OPENROUTER_API_KEY"], "Content-Type": "application/json"},
+    )
+    started = time.perf_counter()
+    with urllib.request.urlopen(req, timeout=timeout) as res:
+        payload = json.loads(res.read())
+    latency = (time.perf_counter() - started) * 1000
+    text = (payload["choices"][0]["message"].get("content") or "").strip().lower()
+    word = text.lstrip("*_`\"' ")
+    action = next((w for w in ("allow", "block", "escalate") if word.startswith(w)), text[:20])
+    return {"action": action, "text": text[:80], "latency_ms": latency,
+            "cost": (payload.get("usage") or {}).get("cost") or 0, "model": payload.get("model")}
+
+
+def llm_baseline(cases, model):
     rows = []
     for case in cases:
         state, _ = build_state(case["tool"], case["args"], case["task"])
-        body = json.dumps({
-            "model": model, "max_tokens": 16, "temperature": 0, "usage": {"include": True},
-            "messages": [{"role": "user", "content": LLM_PROMPT.format(state=state)}],
-        }).encode()
-        req = urllib.request.Request(
-            "https://openrouter.ai/api/v1/chat/completions", data=body,
-            headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"},
-        )
-        started = time.perf_counter()
-        with urllib.request.urlopen(req, timeout=60) as res:
-            payload = json.loads(res.read())
-        latency = (time.perf_counter() - started) * 1000
-        text = (payload["choices"][0]["message"].get("content") or "").strip().lower()
-        word = next((w for w in ("allow", "block", "escalate") if text.startswith(w)), text[:20])
-        rows.append({"label": case["label"], "action": word, "latency_ms": latency,
-                     "cost": (payload.get("usage") or {}).get("cost") or 0})
+        v = llm_verdict(state, model)
+        rows.append({"label": case["label"], "action": v["action"], "latency_ms": v["latency_ms"], "cost": v["cost"]})
     return rows
 
 

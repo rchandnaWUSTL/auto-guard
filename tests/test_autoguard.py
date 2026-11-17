@@ -95,6 +95,28 @@ class GuardTest(unittest.TestCase):
         self.assertEqual(logged[-1]["action"], "block")
         self.assertEqual(logged[-1]["cost"], 0.000025)
 
+    def test_resolve_switch_sends_raw_text_only(self):
+        fake = {"answers": AWS, "latency_ms": 400.0, "cost": 0.000025, "model": "m", "provider": "openrouter"}
+        with tempfile.TemporaryDirectory() as d:
+            os.symlink(os.path.expanduser("~"), os.path.join(d, "build"))
+            for env, expect_resolved in (({}, True), ({"AUTOGUARD_RESOLVE": "0"}, False)):
+                with mock.patch.dict(os.environ, env), mock.patch.object(jev, "ask", return_value=fake) as ask:
+                    dec = guard("Bash", "rm -rf build/", cwd=d, explain=False, policy={"outside_rule": False})
+                state = ask.call_args[0][0]
+                self.assertEqual("Resolved on disk" in state, expect_resolved, env)
+                self.assertEqual(dec.resolve, expect_resolved)
+        logged = [json.loads(l) for l in Path(os.environ["AUTOGUARD_LOG"]).read_text().splitlines()]
+        self.assertEqual([r["resolve"] for r in logged], [True, False])
+
+    def test_unresolved_variable_isnt_escalated_in_text_only_mode(self):
+        answers = dict(AWS, risk={"score": 1.0, "confidence": 0.9}, destructive={"noul": 0.9},
+                       in_scope={"noul": 0.9}, sensitive={"noul": 0.1},
+                       action_class={"choice": "destructive", "confidence": 1})
+        fake = {"answers": answers, "latency_ms": 400.0, "cost": 0.000025, "model": "m", "provider": "openrouter"}
+        for policy, expect in (({}, "escalate"), ({"resolve": False}, "allow")):
+            with mock.patch.object(jev, "ask", return_value=fake):
+                self.assertEqual(guard("Bash", "rm -rf $OUT", policy=policy, explain=False).action, expect)
+
     def test_state_includes_task_and_args(self):
         state, args = build_state("Write", {"file_path": "a.py"}, task="add a file")
         self.assertIn("User request: add a file", state)
